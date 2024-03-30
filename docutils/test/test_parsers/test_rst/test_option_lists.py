@@ -25,7 +25,7 @@ from docutils.utils import new_document
 class ParserTestCase(unittest.TestCase):
     maxDiff = None
 
-    def test_parser(self):
+    def test_parser(self) -> None:
         parser = Parser()
         settings = get_default_settings(Parser)
         settings.warning_stream = ''

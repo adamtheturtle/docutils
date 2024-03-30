@@ -17,16 +17,16 @@ class Writer(writers.Writer):
     output = None
     """Final translated form of `document`."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         writers.Writer.__init__(self)
         self.translator_class = Translator
 
-    def translate(self):
+    def translate(self) -> None:
         visitor = self.translator_class(self.document)
         self.document.walkabout(visitor)
         self.output = visitor.astext()
 
 
 class Translator(nodes.NodeVisitor):
-    def __init__(self, document):
+    def __init__(self, document) -> None:
         nodes.NodeVisitor.__init__(self, document)

@@ -30,7 +30,7 @@ class RstLanguageImporter(LanguageImporter):
     warn_msg = 'rST localisation for language "%s" not found.'
     fallback = None
 
-    def check_content(self, module):
+    def check_content(self, module) -> None:
         """Check if we got an rST language module."""
         if not (isinstance(module.directives, dict)
                 and isinstance(module.roles, dict)):

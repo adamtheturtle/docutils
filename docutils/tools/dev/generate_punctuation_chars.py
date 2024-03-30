@@ -295,7 +295,7 @@ def wrap_string(s, startstring="(", endstring="    )", wrap=71):
     return ''.join(lst)
 
 
-def print_differences(old, new, name):
+def print_differences(old, new, name) -> bool:
     """List characters missing in old/new."""
     if old != new:
         print(f'"{name}" changed')

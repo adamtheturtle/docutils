@@ -26,15 +26,15 @@ from docutils.writers import get_writer_class  # noqa: E402
 
 class GetWriterClassTestCase(unittest.TestCase):
 
-    def test_registered_writer(self):
+    def test_registered_writer(self) -> None:
         get_writer_class('manpage')
         # raises ImportError on failure
 
-    def test_bogus_writer(self):
+    def test_bogus_writer(self) -> None:
         with self.assertRaises(ImportError):
             get_writer_class('nope')
 
-    def test_local_writer(self):
+    def test_local_writer(self) -> None:
         # imports local-writer.py from the test package (added above)
         get_writer_class('test.local-writer')
         # raises ImportError on failure

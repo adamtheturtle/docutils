@@ -133,7 +133,7 @@ def directive(directive_name, language_module, document):
     return directive, messages
 
 
-def register_directive(name, directive):
+def register_directive(name, directive) -> None:
     """
     Register a nonstandard application-defined directive function.
     Language lookups are not needed for such functions.
@@ -147,7 +147,7 @@ def register_directive(name, directive):
 # see also `parsers.rst.Directive` in ../__init__.py.
 
 
-def flag(argument):
+def flag(argument) -> None:
     """
     Check for a valid flag option (no argument) and return ``None``.
     (Directive option conversion function.)
@@ -431,7 +431,7 @@ def choice(argument, values):
                          % (argument, format_values(values)))
 
 
-def format_values(values):
+def format_values(values) -> str:
     return '%s, or "%s"' % (', '.join('"%s"' % s for s in values[:-1]),
                             values[-1])
 

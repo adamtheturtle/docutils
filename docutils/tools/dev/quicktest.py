@@ -72,7 +72,7 @@ options = [('pretty', 'p',
 the data structure: (long option, short option, description)."""
 
 
-def usage():
+def usage() -> None:
     print(usage_header)
     for longopt, shortopt, description in options:
         if longopt[-1:] == '=':
@@ -110,7 +110,7 @@ def _prettyxml(input, document, optargs):
     return document.asdom().toprettyxml('    ', '\n')
 
 
-def _test(input, document, optargs):
+def _test(input, document, optargs) -> str:
     tq = '"""'
     output = document.pformat()         # same as _pretty()
     return """\
@@ -200,7 +200,7 @@ def posixGetArgs(argv):
     return inputFile, outputFile, outputFormat, optargs
 
 
-def main():
+def main() -> None:
     # process cmdline arguments:
     inputFile, outputFile, outputFormat, optargs = posixGetArgs(sys.argv[1:])
     settings = frontend.get_default_settings(Parser)

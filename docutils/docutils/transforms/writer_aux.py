@@ -42,13 +42,13 @@ class Compound(Transform):
 
     default_priority = 910
 
-    def __init__(self, document, startnode=None):
+    def __init__(self, document, startnode=None) -> None:
         warnings.warn('docutils.transforms.writer_aux.Compound is deprecated'
                       ' and will be removed in Docutils 0.21 or later.',
                       DeprecationWarning, stacklevel=2)
         super().__init__(document, startnode)
 
-    def apply(self):
+    def apply(self) -> None:
         for compound in self.document.findall(nodes.compound):
             first_child = True
             for child in compound:
@@ -83,7 +83,7 @@ class Admonitions(Transform):
 
     default_priority = 920
 
-    def apply(self):
+    def apply(self) -> None:
         language = languages.get_language(self.document.settings.language_code,
                                           self.document.reporter)
         for node in self.document.findall(nodes.Admonition):

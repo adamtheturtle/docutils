@@ -21,7 +21,7 @@ from docutils.statemachine import StringList, string2lines
 
 
 class SimpleTableParserTestCase(unittest.TestCase):
-    def test_parse(self):
+    def test_parse(self) -> None:
         parser = tableparser.SimpleTableParser()
         for name, cases in totest.items():
             for casenum, (case_input, case_expected) in enumerate(cases):

@@ -119,13 +119,13 @@ class Struct:
 
     """Stores data attributes for dotted-attribute access."""
 
-    def __init__(self, **keywordargs):
+    def __init__(self, **keywordargs) -> None:
         self.__dict__.update(keywordargs)
 
 
 class Builder:
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.publishers = {
             '': Struct(components=(pep.Reader, rst.Parser, pep_html.Writer,
                                    SettingsSpec)),
@@ -149,7 +149,7 @@ class Builder:
         # default html writer (may change to html5 some time):
         self.publishers['html'] = self.publishers['html4']
 
-    def setup_publishers(self):
+    def setup_publishers(self) -> None:
         """
         Manage configurations for individual publishers.
 
@@ -208,7 +208,7 @@ class Builder:
         settings.update(self.settings_spec.__dict__, publisher.option_parser)
         return settings
 
-    def run(self, directory=None, recurse=1):
+    def run(self, directory=None, recurse=1) -> None:
         recurse = recurse and self.initial_settings.recurse
         if directory:
             self.directories = [directory]
@@ -224,7 +224,7 @@ class Builder:
                     del dirs[:]
                 self.visit(root, files, dirs)
 
-    def visit(self, directory, names, subdirectories):
+    def visit(self, directory, names, subdirectories) -> None:
         settings = self.get_settings('', directory)
         errout = docutils.io.ErrorOutput(encoding=settings.error_encoding)
         if settings.prune and (os.path.abspath(directory) in settings.prune):
@@ -247,7 +247,7 @@ class Builder:
             if name.endswith('.txt'):
                 self.process_txt(directory, name)
 
-    def process_txt(self, directory, name):
+    def process_txt(self, directory, name) -> None:
         if name.startswith('pep-'):
             publisher = 'PEPs'
         else:

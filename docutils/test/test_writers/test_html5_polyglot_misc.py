@@ -32,7 +32,7 @@ def relpath(*parts):
 
 class EncodingTestCase(unittest.TestCase):
 
-    def test_xmlcharrefreplace(self):
+    def test_xmlcharrefreplace(self) -> None:
         # Test that xmlcharrefreplace is the default output encoding
         # error handler.
         settings_overrides = {
@@ -54,7 +54,7 @@ class MovingArgsTestCase(unittest.TestCase):
            '_disable_config': True,
            }
 
-    def test_definition_list_item_classes(self):
+    def test_definition_list_item_classes(self) -> None:
         # Do not drop class arguments for the definition list item.
         # Pass them to the term node instead.
         data = """\
@@ -71,7 +71,7 @@ second term:
         self.assertIn('<dt class="for the second item">second term:</dt>',
                       result)
 
-    def test_definition_list_item_name(self):
+    def test_definition_list_item_name(self) -> None:
         # Do not drop the "name" of the definition list item.
         # Pass it to to the term node instead.
         data = """\
@@ -95,7 +95,7 @@ ham_css = relpath(DATA_ROOT, 'ham.css')
 class SettingsTestCase(unittest.TestCase):
     data = 'test'
 
-    def test_default_stylesheet(self):
+    def test_default_stylesheet(self) -> None:
         # default style sheet, embedded
         mys = {'_disable_config': True}
         styles = core.publish_parts(self.data, writer_name='html5_polyglot',
@@ -103,7 +103,7 @@ class SettingsTestCase(unittest.TestCase):
         self.assertIn('Minimal style sheet '
                       'for the HTML output of Docutils.', styles)
 
-    def test_default_stylesheet_linked(self):
+    def test_default_stylesheet_linked(self) -> None:
         # default style sheet, linked
         mys = {'_disable_config': True,
                'embed_stylesheet': False}
@@ -111,7 +111,7 @@ class SettingsTestCase(unittest.TestCase):
                                     settings_overrides=mys)['stylesheet']
         self.assertIn('docutils/writers/html5_polyglot/minimal.css', styles)
 
-    def test_math_stylesheet_linked(self):
+    def test_math_stylesheet_linked(self) -> None:
         # default + math style sheet, linked
         mys = {'_disable_config': True,
                'embed_stylesheet': False,
@@ -121,7 +121,7 @@ class SettingsTestCase(unittest.TestCase):
         self.assertIn('docutils/writers/html5_polyglot/minimal.css', styles)
         self.assertIn('docutils/writers/html5_polyglot/math.css', styles)
 
-    def test_custom_stylesheet_linked(self):
+    def test_custom_stylesheet_linked(self) -> None:
         # default + custom style sheet, linked
         mys = {'_disable_config': True,
                'embed_stylesheet': False,
@@ -132,7 +132,7 @@ class SettingsTestCase(unittest.TestCase):
         self.assertIn('docutils/writers/html5_polyglot/minimal.css', styles)
         self.assertIn('href="data/ham.css"', styles)
 
-    def test_custom_stylesheet_dir(self):
+    def test_custom_stylesheet_dir(self) -> None:
         mys = {'_disable_config': True,
                'embed_stylesheet': False,
                'stylesheet_dirs': (
@@ -145,7 +145,7 @@ class SettingsTestCase(unittest.TestCase):
             self.assertIn('docutils/writers/html5_polyglot/minimal.css', styles)
         self.assertIn(f'href="{ham_css}"', styles)
 
-    def test_custom_stylesheet_dir_embedded(self):
+    def test_custom_stylesheet_dir_embedded(self) -> None:
         mys = {'_disable_config': True,
                'embed_stylesheet': True,
                'stylesheet_dirs': (
@@ -156,7 +156,7 @@ class SettingsTestCase(unittest.TestCase):
                                     settings_overrides=mys)['stylesheet']
         self.assertIn('dl.docutils dd {\n  margin-bottom: 0.5em }', styles)
 
-    def test_future_warnings(self):
+    def test_future_warnings(self) -> None:
         """Warn about deprecated setting name."""
         my_settings = {'_disable_config': True,
                        'embed_images': False,
@@ -184,14 +184,14 @@ class MathTestCase(unittest.TestCase):
     custom_mathjax_url = '/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML'
     data = ':math:`42`'
 
-    def test_math_output_default(self):
+    def test_math_output_default(self) -> None:
         # HTML with math.css stylesheet (since 0.11)
         mys = {'_disable_config': True}
         styles = core.publish_parts(self.data, writer_name='html5_polyglot',
                                     settings_overrides=mys)['stylesheet']
         self.assertIn('convert LaTeX equations to HTML output.', styles)
 
-    def test_math_output_mathjax(self):
+    def test_math_output_mathjax(self) -> None:
         # Explicitly specifying math_output=MathJax, case insensitively
         # use default MathJax URL
         mys = {'_disable_config': True,
@@ -201,7 +201,7 @@ class MathTestCase(unittest.TestCase):
                                   settings_overrides=mys)['head']
         self.assertIn(self.mathjax_script % self.default_mathjax_url, head)
 
-    def test_math_output_mathjax_custom(self):
+    def test_math_output_mathjax_custom(self) -> None:
         # Customizing MathJax URL
         mys = {'_disable_config': True,
                'math_output':
@@ -210,7 +210,7 @@ class MathTestCase(unittest.TestCase):
                                   settings_overrides=mys)['head']
         self.assertIn(self.mathjax_script % self.custom_mathjax_url, head)
 
-    def test_math_output_html(self):
+    def test_math_output_html(self) -> None:
         mys = {'_disable_config': True,
                'math_output': 'HTML'}
         head = core.publish_parts(self.data, writer_name='html5_polyglot',
@@ -218,7 +218,7 @@ class MathTestCase(unittest.TestCase):
         # There should be no MathJax script when math_output is not MathJax
         self.assertNotIn('MathJax.js', head)
 
-    def test_math_output_html_stylesheet(self):
+    def test_math_output_html_stylesheet(self) -> None:
         mys = {'_disable_config': True,
                'math_output': 'HTML math.css,custom/style.css',
                'stylesheet_dirs': (
@@ -234,7 +234,7 @@ class MathTestCase(unittest.TestCase):
 <link rel="stylesheet" href="custom/style.css" type="text/css" />
 """, styles)
 
-    def test_math_output_mathjax_no_math(self):
+    def test_math_output_mathjax_no_math(self) -> None:
         # There should be no math script when text does not contain math
         head = core.publish_parts('No math.', writer_name='html5_polyglot')['head']
         self.assertNotIn('MathJax', head)

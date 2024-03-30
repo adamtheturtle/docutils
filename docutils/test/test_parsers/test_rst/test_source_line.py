@@ -45,7 +45,7 @@ TEST_ROOT = os.path.abspath(os.path.join(__file__, '..', '..', '..'))
 class TransformTestCase(unittest.TestCase):
     maxDiff = None
 
-    def test_transforms(self):
+    def test_transforms(self) -> None:
         parser = Parser()
         settings = get_default_settings(Parser)
         settings.warning_stream = ''

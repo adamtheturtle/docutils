@@ -67,7 +67,7 @@ class PublisherTests(unittest.TestCase):
     settings = {'_disable_config': True,
                 'datestamp': False}
 
-    def test_input_error_handling(self):
+    def test_input_error_handling(self) -> None:
         # core.publish_cmdline(argv=['nonexisting/path'])
         # exits with a short message, if `traceback` is False,
 
@@ -76,14 +76,14 @@ class PublisherTests(unittest.TestCase):
             core.publish_cmdline(argv=['nonexisting/path'],
                                  settings_overrides={'traceback': True})
 
-    def test_output_error_handling(self):
+    def test_output_error_handling(self) -> None:
         # pass IOErrors to calling application if `traceback` is True
         with self.assertRaises(docutils.io.OutputError):
             core.publish_cmdline(argv=[os.path.join(DATA_ROOT, 'include.txt'),
                                        'nonexisting/path'],
                                  settings_overrides={'traceback': True})
 
-    def test_set_destination(self):
+    def test_set_destination(self) -> None:
         # Exit if `_destination` and `output` settings conflict.
         publisher = core.Publisher()
         publisher.get_settings(output='out_name', _destination='out_name')
@@ -95,14 +95,14 @@ class PublisherTests(unittest.TestCase):
         with self.assertRaises(SystemExit):
             publisher.set_destination()
 
-    def test_destination_output_conflict(self):
+    def test_destination_output_conflict(self) -> None:
         # Exit if positional argument and --output option conflict.
         settings = {'output': 'out_name'}
         with self.assertRaises(SystemExit):
             core.publish_cmdline(argv=['-', 'dest_name'],
                                  settings_overrides=settings)
 
-    def test_publish_string_input_encoding(self):
+    def test_publish_string_input_encoding(self) -> None:
         """Test handling of encoded input."""
         # Transparently decode `bytes` source (with "input_encoding" setting)
         # default: auto-detect, fallback utf-8
@@ -124,7 +124,7 @@ class PublisherTests(unittest.TestCase):
                                      settings_overrides=settings)
         self.assertTrue(output.endswith('Grüße\n'))
 
-    def test_publish_string_output_encoding(self):
+    def test_publish_string_output_encoding(self) -> None:
         settings = dict(self.settings)
         settings['output_encoding'] = 'latin1'
         settings['output_encoding_error_handler'] = 'replace'
@@ -137,7 +137,7 @@ class PublisherTests(unittest.TestCase):
                                            settings_overrides=settings))
         self.assertEqual(expected.encode('latin1', 'replace'), output)
 
-    def test_publish_string_output_encoding_odt(self):
+    def test_publish_string_output_encoding_odt(self) -> None:
         """The ODT writer generates a zip archive, not a `str`.
 
         TODO: return `str` with document as "flat XML" (.fodt).
@@ -156,7 +156,7 @@ class PublishDoctreeTestCase(unittest.TestCase, docutils.SettingsSpec):
         '_disable_config': True,
         'warning_stream': docutils.io.NullOutput()}
 
-    def test_publish_doctree(self):
+    def test_publish_doctree(self) -> None:
         # Test `publish_doctree` and `publish_from_doctree`.
 
         # Produce the document tree.
@@ -196,7 +196,7 @@ class PublishDoctreeTestCase(unittest.TestCase, docutils.SettingsSpec):
             settings_spec=self)
         self.assertTrue(isinstance(parts, dict))
 
-    def test_publish_pickle(self):
+    def test_publish_pickle(self) -> None:
         # Test publishing a document tree with pickling and unpickling.
 
         # Produce the document tree.

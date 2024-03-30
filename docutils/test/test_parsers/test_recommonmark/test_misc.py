@@ -44,12 +44,12 @@ Final paragraph.
 @unittest.skipIf(Parser is None, 'Optional "recommonmark" module not found.')
 class RecommonmarkParserTests(unittest.TestCase):
 
-    def test_parser_name(self):
+    def test_parser_name(self) -> None:
         # cf. ../test_rst/test_directives/test__init__.py
         # this is used in the "include" directive's :parser: option.
         self.assertIs(rst_directives.parser_name('recommonmark'), Parser)
 
-    def test_raw_disabled(self):
+    def test_raw_disabled(self) -> None:
         output = publish_string(sample_with_html, parser=Parser(),
                                 settings_overrides={
                                     'warning_stream': '',
@@ -59,7 +59,7 @@ class RecommonmarkParserTests(unittest.TestCase):
         self.assertIn(b'<system_message', output)
         self.assertIn(b'Raw content disabled.', output)
 
-    def test_raw_disabled_inline(self):
+    def test_raw_disabled_inline(self) -> None:
         output = publish_string('foo <a href="uri">', parser=Parser(),
                                 settings_overrides={'warning_stream': '',
                                                     'raw_enabled': False,

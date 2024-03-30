@@ -29,15 +29,15 @@ except ImportError:
 
 class GetParserClassTestCase(unittest.TestCase):
 
-    def test_registered_parser(self):
+    def test_registered_parser(self) -> None:
         get_parser_class('rst')
         # raises ImportError on failure
 
-    def test_bogus_parser(self):
+    def test_bogus_parser(self) -> None:
         with self.assertRaises(ImportError):
             get_parser_class('nope')
 
-    def test_local_parser(self):
+    def test_local_parser(self) -> None:
         # requires local-parser.py in "test root" directory
         get_parser_class('test.local-parser')
         # raises ImportError on failure
@@ -47,7 +47,7 @@ class GetParserClassTestCase(unittest.TestCase):
                  'Optional "recommonmark" module found.')
 class RecommonmarkMissingTests(unittest.TestCase):
 
-    def test_missing_parser_message(self):
+    def test_missing_parser_message(self) -> None:
         # match multiline message (?s) = re.DOTALL "." also matches newline
         with self.assertRaisesRegex(ImportError,
                                     '(?s)requires the.*package .*recommonmark'):

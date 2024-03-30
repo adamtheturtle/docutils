@@ -21,7 +21,7 @@ from docutils import parsers, utils, frontend
 
 class RstParserTests(unittest.TestCase):
 
-    def test_inputrestrictions(self):
+    def test_inputrestrictions(self) -> None:
         parser_class = parsers.get_parser_class('rst')
         parser = parser_class()
         document = utils.new_document('test data',

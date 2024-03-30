@@ -115,7 +115,7 @@ class ConfigFileTests(unittest.TestCase):
     compare = difflib.Differ().compare
     """Comparison method shared by all tests."""
 
-    def setUp(self):
+    def setUp(self) -> None:
         warnings.filterwarnings('ignore',
                                 category=frontend.ConfigDeprecationWarning)
         warnings.filterwarnings('ignore', category=DeprecationWarning)
@@ -136,7 +136,7 @@ class ConfigFileTests(unittest.TestCase):
             expected.update(self.settings[name])
         return expected
 
-    def compare_output(self, result, expected):
+    def compare_output(self, result, expected) -> None:
         """`result` and `expected` should both be dicts."""
         self.assertIn('record_dependencies', result)
         rd_result = result.pop('record_dependencies')
@@ -145,31 +145,31 @@ class ConfigFileTests(unittest.TestCase):
             self.assertEqual(str(rd_result), str(rd_expected))
         self.assertEqual(expected, result)
 
-    def test_nofiles(self):
+    def test_nofiles(self) -> None:
         self.compare_output(self.files_settings(),
                             self.expected_settings())
 
-    def test_old(self):
+    def test_old(self) -> None:
         with self.assertWarnsRegex(FutureWarning,
                                    r'The "\[option\]" section is deprecated.'):
             self.files_settings('old')
 
-    def test_syntax_error(self):
+    def test_syntax_error(self) -> None:
         with self.assertRaisesRegex(
                  ValueError,
                  'Error in config file ".*config_syntax_error.txt", '
                  r'section "\[general\]"'):
             self.files_settings('syntax_error')
 
-    def test_one(self):
+    def test_one(self) -> None:
         self.compare_output(self.files_settings('one'),
                             self.expected_settings('one'))
 
-    def test_multiple(self):
+    def test_multiple(self) -> None:
         self.compare_output(self.files_settings('one', 'two'),
                             self.expected_settings('one', 'two'))
 
-    def test_multiple_with_html5_writer(self):
+    def test_multiple_with_html5_writer(self) -> None:
         # initialize option parser with different component set
         self.option_parser = frontend.OptionParser(
             components=(html5_polyglot.Writer, rst.Parser),
@@ -178,25 +178,25 @@ class ConfigFileTests(unittest.TestCase):
         self.compare_output(self.files_settings('one', 'two'),
                             self.expected_settings('two (html5)'))
 
-    def test_old_and_new(self):
+    def test_old_and_new(self) -> None:
         self.compare_output(self.files_settings('old', 'two'),
                             self.expected_settings('old', 'two'))
 
-    def test_list(self):
+    def test_list(self) -> None:
         self.compare_output(self.files_settings('list'),
                             self.expected_settings('list'))
 
-    def test_list2(self):
+    def test_list2(self) -> None:
         # setting `stylesheet` in 'list2' resets stylesheet_path to None
         self.compare_output(self.files_settings('list', 'list2'),
                             self.expected_settings('list2'))
 
-    def test_encoding_error_handler(self):
+    def test_encoding_error_handler(self) -> None:
         # set error_encoding and error_encoding_error_handler (from affix)
         self.compare_output(self.files_settings('error'),
                             self.expected_settings('error'))
 
-    def test_encoding_error_handler2(self):
+    def test_encoding_error_handler2(self) -> None:
         # second config file only changes encoding, not error_handler:
         self.compare_output(self.files_settings('error', 'error2'),
                             self.expected_settings('error', 'error2'))
@@ -209,7 +209,7 @@ class ConfigEnvVarFileTests(ConfigFileTests):
     environment variable and the standard Docutils config file mechanism.
     """
 
-    def setUp(self):
+    def setUp(self) -> None:
         ConfigFileTests.setUp(self)
         self.orig_environ = os.environ
         os.environ = os.environ.copy()
@@ -220,16 +220,16 @@ class ConfigEnvVarFileTests(ConfigFileTests):
         settings = self.option_parser.get_standard_config_settings()
         return settings.__dict__
 
-    def tearDown(self):
+    def tearDown(self) -> None:
         os.environ = self.orig_environ
 
-    def test_old(self):
+    def test_old(self) -> None:
         pass  # don't repreat this test
 
     @unittest.skipUnless(
         os.name == 'posix',
         'os.path.expanduser() does not use HOME on Windows (since 3.8)')
-    def test_get_standard_config_files(self):
+    def test_get_standard_config_files(self) -> None:
         os.environ['HOME'] = '/home/parrot'
         # TODO: set up mock home directory under Windows
         self.assertEqual(self.option_parser.get_standard_config_files(),
@@ -249,13 +249,13 @@ class HelperFunctionsTests(unittest.TestCase):
     pathdict = {'foo': 'hallo', 'ham': 'häm', 'spam': 'spam'}
     keys = ['foo', 'ham']
 
-    def setUp(self):
+    def setUp(self) -> None:
         with warnings.catch_warnings():
             warnings.filterwarnings('ignore', category=DeprecationWarning)
             self.option_parser = frontend.OptionParser(
                 components=(rst.Parser,), read_config_files=None)
 
-    def test_make_paths_absolute(self):
+    def test_make_paths_absolute(self) -> None:
         pathdict = self.pathdict.copy()
         frontend.make_paths_absolute(pathdict, self.keys, base_path='base')
         self.assertEqual(pathdict['foo'], os.path.abspath('base/hallo'))
@@ -263,7 +263,7 @@ class HelperFunctionsTests(unittest.TestCase):
         # not touched, because key not in keys:
         self.assertEqual(pathdict['spam'], 'spam')
 
-    def test_make_paths_absolute_cwd(self):
+    def test_make_paths_absolute_cwd(self) -> None:
         # With base_path None, the cwd is used as base path.
         # Settings values may-be `unicode` instances, therefore
         # os.getcwdu() is used and the converted path is a unicode instance:
@@ -286,11 +286,11 @@ class HelperFunctionsTests(unittest.TestCase):
                 ('false', False),
                )
 
-    def test_validate_boolean(self):
+    def test_validate_boolean(self) -> None:
         for v, result in self.boolean_settings:
             self.assertEqual(frontend.validate_boolean(v), result)
 
-    def test_validate_ternary(self):
+    def test_validate_ternary(self) -> None:
         tests = (
                  ('500V', '500V'),
                  ('parrot', 'parrot'),
@@ -298,7 +298,7 @@ class HelperFunctionsTests(unittest.TestCase):
         for v, result in self.boolean_settings + tests:
             self.assertEqual(frontend.validate_ternary(v), result)
 
-    def test_validate_threshold(self):
+    def test_validate_threshold(self) -> None:
         tests = (('1', 1),
                  ('info', 1),
                  ('warning', 2),
@@ -312,7 +312,7 @@ class HelperFunctionsTests(unittest.TestCase):
         with self.assertRaisesRegex(LookupError, "unknown threshold: 'debug'"):
             frontend.validate_threshold('debug')
 
-    def test_validate_colon_separated_string_list(self):
+    def test_validate_colon_separated_string_list(self) -> None:
         tests = (('a', ['a']),
                  ('a:b', ['a', 'b']),
                  (['a'], ['a']),
@@ -322,7 +322,7 @@ class HelperFunctionsTests(unittest.TestCase):
             self.assertEqual(
                 frontend.validate_colon_separated_string_list(v), result)
 
-    def test_validate_comma_separated_list(self):
+    def test_validate_comma_separated_list(self) -> None:
         tests = (('a', ['a']),
                  ('a,b', ['a', 'b']),
                  (['a'], ['a']),
@@ -331,7 +331,7 @@ class HelperFunctionsTests(unittest.TestCase):
         for v, result in tests:
             self.assertEqual(frontend.validate_comma_separated_list(v), result)
 
-    def test_validate_math_output(self):
+    def test_validate_math_output(self) -> None:
         tests = (('', []),
                  ('LaTeX ', ['latex', '']),
                  ('MathML', ['mathml', '']),
@@ -342,7 +342,7 @@ class HelperFunctionsTests(unittest.TestCase):
         for v, result in tests:
             self.assertEqual(frontend.validate_math_output(v), result)
 
-    def test_validate_math_output_errors(self):
+    def test_validate_math_output_errors(self) -> None:
         tests = (('XML', 'Unknown math output format: "XML",\n'
                   "    choose from ('html', 'latex', 'mathml', 'mathjax')."),
                  ('MathML blame', 'MathML converter "blame" not supported,\n'
@@ -354,7 +354,7 @@ class HelperFunctionsTests(unittest.TestCase):
                 frontend.validate_math_output(value)
             self.assertEqual(message, str(cm.exception))
 
-    def test_validate_url_trailing_slash(self):
+    def test_validate_url_trailing_slash(self) -> None:
         tests = (('', './'),
                  (None, './'),
                  ('http://example.org', 'http://example.org/'),
@@ -363,7 +363,7 @@ class HelperFunctionsTests(unittest.TestCase):
         for v, result in tests:
             self.assertEqual(frontend.validate_url_trailing_slash(v), result)
 
-    def test_validate_smartquotes_locales(self):
+    def test_validate_smartquotes_locales(self) -> None:
         tests = (
             ('en:ssvv', [('en', 'ssvv')]),
             ('sd:«»°°', [('sd', '«»°°')]),
@@ -373,7 +373,7 @@ class HelperFunctionsTests(unittest.TestCase):
         for v, result in tests:
             self.assertEqual(frontend.validate_smartquotes_locales(v), result)
 
-    def test_set_conditions_deprecation_warning(self):
+    def test_set_conditions_deprecation_warning(self) -> None:
         reporter = utils.Reporter('test', 1, 4)
         with self.assertWarnsRegex(DeprecationWarning,
                                    'Set attributes via configuration '):

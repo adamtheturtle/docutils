@@ -40,7 +40,7 @@ except ImportError:
 class ParserTestCase(unittest.TestCase):
     maxDiff = None
 
-    def test_parser(self):
+    def test_parser(self) -> None:
         # eventually skip optional parts:
         if not with_pygments:
             del totest['include_parsed_code']

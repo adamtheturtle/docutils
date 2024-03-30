@@ -22,7 +22,7 @@ from docutils import core
 
 class PickleTests(unittest.TestCase):
 
-    def test_pickle(self):
+    def test_pickle(self) -> None:
         doctree = core.publish_doctree(
             source='Title\n=====\n\nparagraph\n',
             settings_overrides={'_disable_config': True})

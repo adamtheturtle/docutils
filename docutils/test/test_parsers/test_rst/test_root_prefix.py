@@ -37,7 +37,7 @@ REL_PREFIX = os.path.relpath(ROOT_PREFIX).replace('\\', '/')
 
 class ParserTestCase(unittest.TestCase):
 
-    def test_parser(self):
+    def test_parser(self) -> None:
         parser = Parser()
         settings = get_default_settings(Parser)
         settings.warning_stream = ''

@@ -15,6 +15,6 @@ class Parser(parsers.Parser):
     supported = ('dummy',)
     """Formats this reader supports."""
 
-    def parser(self, inputstring, document):
+    def parser(self, inputstring, document) -> None:
         self.setup_parse(inputstring, document)
         self.finish_parse()

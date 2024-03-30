@@ -21,7 +21,7 @@ from docutils.statemachine import StringList, string2lines
 
 
 class GridTableParserTestCase(unittest.TestCase):
-    def test_parse_table(self):
+    def test_parse_table(self) -> None:
         parser = tableparser.GridTableParser()
         for name, cases in totest.items():
             for casenum, case in enumerate(cases):
@@ -36,7 +36,7 @@ class GridTableParserTestCase(unittest.TestCase):
                     output = f'{details.__class__.__name__}: {details}'
                 self.assertEqual(output, case_table)
 
-    def test_parse(self):
+    def test_parse(self) -> None:
         parser = tableparser.GridTableParser()
         for name, cases in totest.items():
             for casenum, case in enumerate(cases):

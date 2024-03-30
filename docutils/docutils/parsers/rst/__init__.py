@@ -75,6 +75,7 @@ import docutils.statemachine
 from docutils.parsers.rst import roles, states
 from docutils import frontend, nodes
 from docutils.transforms import universal
+from typing import NoReturn
 
 
 class Parser(docutils.parsers.Parser):
@@ -150,7 +151,7 @@ class Parser(docutils.parsers.Parser):
     config_section = 'restructuredtext parser'
     config_section_dependencies = ('parsers',)
 
-    def __init__(self, rfc2822=False, inliner=None):
+    def __init__(self, rfc2822=False, inliner=None) -> None:
         if rfc2822:
             self.initial_state = 'RFC2822Body'
         else:
@@ -161,7 +162,7 @@ class Parser(docutils.parsers.Parser):
     def get_transforms(self):
         return super().get_transforms() + [universal.SmartQuotes]
 
-    def parse(self, inputstring, document):
+    def parse(self, inputstring, document) -> None:
         """Parse `inputstring` and populate `document`, a document tree."""
         self.setup_parse(inputstring, document)
         # provide fallbacks in case the document has only generic settings
@@ -199,7 +200,7 @@ class DirectiveError(Exception):
     instead!
     """
 
-    def __init__(self, level, message):
+    def __init__(self, level, message) -> None:
         """Set error `message` and `level`"""
         Exception.__init__(self)
         self.level = level
@@ -317,7 +318,7 @@ class Directive:
     """May the directive have content?"""
 
     def __init__(self, name, arguments, options, content, lineno,
-                 content_offset, block_text, state, state_machine):
+                 content_offset, block_text, state, state_machine) -> None:
         self.name = name
         self.arguments = arguments
         self.options = options
@@ -329,7 +330,7 @@ class Directive:
         self.state_machine = state_machine
         self.reporter = state_machine.reporter
 
-    def run(self):
+    def run(self) -> NoReturn:
         raise NotImplementedError('Must override run() in subclass.')
 
     # Directive errors:
@@ -366,7 +367,7 @@ class Directive:
 
     # Convenience methods:
 
-    def assert_has_content(self):
+    def assert_has_content(self) -> None:
         """
         Throw an ERROR-level DirectiveError if the directive doesn't
         have contents.
@@ -375,7 +376,7 @@ class Directive:
             raise self.error('Content block expected for the "%s" directive; '
                              'none found.' % self.name)
 
-    def add_name(self, node):
+    def add_name(self, node) -> None:
         """Append self.options['name'] to node['names'] if it exists.
 
         Also normalize the name string and register it as explicit target.

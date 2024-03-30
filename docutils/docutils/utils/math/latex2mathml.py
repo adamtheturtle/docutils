@@ -359,7 +359,7 @@ class math:
     https://w3c.github.io/mathml-core/#global-attributes
     """
 
-    def __init__(self, *children, **attributes):
+    def __init__(self, *children, **attributes) -> None:
         """Set up node with `children` and `attributes`.
 
         Attributes are downcased to allow using CLASS to set "class" value.
@@ -377,7 +377,7 @@ class math:
             # (Python keyword). MathML uses only lowercase attributes.
             self.attributes[key.lower()] = attributes[key]
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         content = [repr(item) for item in self.children]
         if hasattr(self, 'data'):
             content.append(repr(self.data))
@@ -387,7 +387,7 @@ class math:
                     if v is not None]
         return self.__class__.__name__ + '(%s)' % ', '.join(content)
 
-    def __len__(self):
+    def __len__(self) -> int:
         return len(self.children)
 
     # emulate dictionary-like access to attributes
@@ -395,7 +395,7 @@ class math:
     def __getitem__(self, key):
         return self.attributes[key]
 
-    def __setitem__(self, key, item):
+    def __setitem__(self, key, item) -> None:
         self.attributes[key] = item
 
     def get(self, *args, **kwargs):
@@ -452,7 +452,7 @@ class math:
                 *self._xml_body(level),
                 '</%s>' % self.__class__.__name__]
 
-    def xml_starttag(self):
+    def xml_starttag(self) -> str:
         attrs = (f'{k}="{self.a_str(v)}"'
                  for k, v in self.attributes.items() if v is not None)
         return '<%s>' % ' '.join((self.__class__.__name__, *attrs))
@@ -528,7 +528,7 @@ class mtable(math): pass
 class mrow(math):
     """Group sub-expressions as a horizontal row."""
 
-    def transfer_attributes(self, other):
+    def transfer_attributes(self, other) -> None:
         # Update dictionary `other.attributes` with self.attributes.
         # String attributes (class, style) are appended to existing values,
         # other attributes (displaystyle, scriptlevel) replace them.
@@ -622,7 +622,7 @@ class MathToken(math):
     """
     nchildren = 0
 
-    def __init__(self, data, **attributes):
+    def __init__(self, data, **attributes) -> None:
         self.data = data
         super().__init__(**attributes)
 
@@ -650,7 +650,7 @@ class MathSchema(math):
 
     nchildren = 2
 
-    def __init__(self, *children, **kwargs):
+    def __init__(self, *children, **kwargs) -> None:
         self.switch = kwargs.pop('switch', False)
         math.__init__(self, *children, **kwargs)
 

@@ -28,7 +28,7 @@ TEST_ROOT = os.path.abspath(os.path.join(__file__, '..', '..'))
 
 class WriterPublishTestCase(unittest.TestCase):
     # maxDiff = None
-    def test_publish(self):
+    def test_publish(self) -> None:
         writer_name = 'html5'
         template_path = os.path.join(TEST_ROOT, 'data', 'full-template.txt')
         for name, cases in totest.items():

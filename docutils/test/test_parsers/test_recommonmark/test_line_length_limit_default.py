@@ -30,7 +30,7 @@ from docutils.utils import new_document
 
 
 class RecommonmarkParserTestCase(unittest.TestCase):
-    def test_parser(self):
+    def test_parser(self) -> None:
         parser = Parser()
         settings = get_default_settings(Parser)
         settings.warning_stream = ''

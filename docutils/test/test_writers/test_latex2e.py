@@ -44,7 +44,7 @@ class WriterPublishTestCase(unittest.TestCase):
         'legacy_column_widths': True,
         }
 
-    def run_samples(self, samples, settings):
+    def run_samples(self, samples, settings) -> None:
         for name, cases in samples.items():
             for casenum, (rst_input, expected) in enumerate(cases):
                 with self.subTest(id=f'samples_default[{name!r}][{casenum}]'):
@@ -54,53 +54,53 @@ class WriterPublishTestCase(unittest.TestCase):
                     output = output.decode()
                     self.assertEqual(expected, output)
 
-    def test_defaults(self):
+    def test_defaults(self) -> None:
         self.run_samples(samples_default, self.settings)
 
-    def test_docutils_toc(self):
+    def test_docutils_toc(self) -> None:
         settings = self.settings.copy()
         settings['use_latex_toc'] = False
         self.run_samples(samples_docutils_toc, settings)
 
-    def test_book(self):
+    def test_book(self) -> None:
         settings = self.settings.copy()
         settings['documentclass'] = 'book'
         self.run_samples(samples_book, settings)
 
-    def test_latex_sectnum(self):
+    def test_latex_sectnum(self) -> None:
         settings = self.settings.copy()
         settings['use_latex_toc'] = False
         settings['sectnum_xform'] = False
         self.run_samples(samples_latex_sectnum, settings)
 
-    def test_latex_citations(self):
+    def test_latex_citations(self) -> None:
         settings = self.settings.copy()
         settings['use_latex_citations'] = True
         self.run_samples(samples_latex_citations, settings)
 
-    def test_table_style_auto(self):
+    def test_table_style_auto(self) -> None:
         settings = self.settings.copy()
         settings['table_style'] = ['colwidths-auto']
         self.run_samples(samples_table_style_auto, settings)
 
-    def test_booktabs(self):
+    def test_booktabs(self) -> None:
         settings = self.settings.copy()
         settings['table_style'] = ['booktabs']
         self.run_samples(samples_table_style_booktabs, settings)
 
-    def test_link_stylesheet(self):
+    def test_link_stylesheet(self) -> None:
         settings = self.settings.copy()
         settings['stylesheet_path'] = f'{spam},{ham}'
         self.run_samples(samples_stylesheet, settings)
 
-    def test_embed_embed_stylesheet(self):
+    def test_embed_embed_stylesheet(self) -> None:
         settings = self.settings.copy()
         settings['stylesheet_path'] = f'{spam},{ham}'
         settings['embed_stylesheet'] = True
         settings['warning_stream'] = ''
         self.run_samples(samples_stylesheet_embed, settings)
 
-    def test_bibtex(self):
+    def test_bibtex(self) -> None:
         settings = self.settings.copy()
         settings['use_bibtex'] = ['alpha', 'xampl']
         self.run_samples(samples_bibtex, settings)

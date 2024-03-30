@@ -23,19 +23,20 @@ import sys
 import os
 import re
 from xml.parsers.expat import ParserCreate
+from typing import Optional
 
 
 usage_msg = """Usage: %s [unicode.xml]\n"""
 
 
-def usage(prog, status=0, msg=None):
+def usage(prog, status=0, msg=None) -> None:
     sys.stderr.write(usage_msg % prog)
     if msg:
         sys.stderr.write(msg + '\n')
     sys.exit(status)
 
 
-def main(argv=None):
+def main(argv=None) -> None:
     if argv is None:
         argv = sys.argv
     if len(argv) == 2:
@@ -51,7 +52,7 @@ def main(argv=None):
     process(infile)
 
 
-def process(infile):
+def process(infile) -> None:
     grouper = CharacterEntitySetExtractor(infile)
     grouper.group()
     grouper.write_sets()
@@ -75,7 +76,7 @@ class CharacterEntitySetExtractor:
    <https://docutils.sourceforge.io>.
 """
 
-    def __init__(self, infile):
+    def __init__(self, infile) -> None:
         self.infile = infile
         """Input unicode.xml file."""
 
@@ -101,16 +102,16 @@ class CharacterEntitySetExtractor:
         parser.CharacterDataHandler = self.CharacterDataHandler
         return parser
 
-    def group(self):
+    def group(self) -> None:
         self.parser.ParseFile(self.infile)
 
-    def StartElementHandler(self, name, attributes):
+    def StartElementHandler(self, name, attributes) -> None:
         self.elements.append(name)
         handler = name + '_start'
         if hasattr(self, handler):
             getattr(self, handler)(name, attributes)
 
-    def EndElementHandler(self, name):
+    def EndElementHandler(self, name) -> None:
         assert self.elements[-1] == name, \
                'unknown end-tag %r (%r)' % (name, self.element)
         self.elements.pop()
@@ -118,15 +119,15 @@ class CharacterEntitySetExtractor:
         if hasattr(self, handler):
             getattr(self, handler)(name)
 
-    def CharacterDataHandler(self, data):
+    def CharacterDataHandler(self, data) -> None:
         handler = self.elements[-1] + '_data'
         if hasattr(self, handler):
             getattr(self, handler)(data)
 
-    def character_start(self, name, attributes):
+    def character_start(self, name, attributes) -> None:
         self.charid = attributes['id']
 
-    def entity_start(self, name, attributes):
+    def entity_start(self, name, attributes) -> None:
         set = self.entity_set_name(attributes['set'])
         if not set:
             return
@@ -140,7 +141,7 @@ class CharacterEntitySetExtractor:
                     % (set, entity, self.sets[set][entity], self.charid))
         self.sets[set][entity] = self.charid
 
-    def description_data(self, data):
+    def description_data(self, data) -> None:
         self.descriptions.setdefault(self.charid, '')
         self.descriptions[self.charid] += data
 
@@ -159,12 +160,12 @@ class CharacterEntitySetExtractor:
         self.sets.setdefault(name, {})
         return name
 
-    def write_sets(self):
+    def write_sets(self) -> None:
         sets = sorted(self.sets.keys())
         for set_name in sets:
             self.write_set(set_name)
 
-    def write_set(self, set_name, wide=None):
+    def write_set(self, set_name, wide=None) -> None:
         if wide:
             outname = set_name + '-wide.txt'
         else:
@@ -185,7 +186,7 @@ class CharacterEntitySetExtractor:
             self.write_set(set_name, 1)
 
     def write_entity(self, set, set_name, entity_name, outfile, longest,
-                     wide=None):
+                     wide=None) -> Optional[int]:
         charid = set[entity_name]
         if not wide:
             for code in charid[1:].split('-'):

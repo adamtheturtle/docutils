@@ -13,6 +13,7 @@ from importlib import import_module
 import docutils
 from docutils import languages, Component
 from docutils.transforms import universal
+from typing import NoReturn
 
 
 class Writer(Component):
@@ -53,7 +54,7 @@ class Writer(Component):
     Set by `write()`.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
 
         self.parts = {}
         """Mapping of document part names to fragments of `self.output`.
@@ -80,7 +81,7 @@ class Writer(Component):
         self.translate()
         return self.destination.write(self.output)
 
-    def translate(self):
+    def translate(self) -> NoReturn:
         """
         Do final translation of `self.document` into `self.output`.  Called
         from `write`.  Override in subclasses.
@@ -94,7 +95,7 @@ class Writer(Component):
         """
         raise NotImplementedError('subclass must override this method')
 
-    def assemble_parts(self):
+    def assemble_parts(self) -> None:
         """Assemble the `self.parts` dictionary.  Extend in subclasses.
 
         See <https://docutils.sourceforge.io/docs/api/publisher.html>.

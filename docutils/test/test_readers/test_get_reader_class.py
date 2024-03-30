@@ -26,15 +26,15 @@ from docutils.readers import get_reader_class  # noqa: E402
 
 class GetReaderClassTestCase(unittest.TestCase):
 
-    def test_registered_reader(self):
+    def test_registered_reader(self) -> None:
         get_reader_class('pep')
         # raises ImportError on failure
 
-    def test_bogus_reader(self):
+    def test_bogus_reader(self) -> None:
         with self.assertRaises(ImportError):
             get_reader_class('nope')
 
-    def test_local_reader(self):
+    def test_local_reader(self) -> None:
         # requires local-reader.py in `test` package
         get_reader_class('test.local-reader')
         # raises ImportError on failure

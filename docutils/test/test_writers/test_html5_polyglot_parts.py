@@ -35,7 +35,7 @@ class Html5WriterPublishPartsTestCase(unittest.TestCase):
 
     maxDiff = None
 
-    def test_publish(self):
+    def test_publish(self) -> None:
         if not with_pygments:
             del totest['syntax_highlight']
         writer_name = 'html5'

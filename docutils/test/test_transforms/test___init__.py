@@ -29,14 +29,14 @@ class TestTransform(transforms.Transform):
 
     applied = 0
 
-    def apply(self, **kwargs):
+    def apply(self, **kwargs) -> None:
         self.applied += 1
         assert kwargs == {'foo': 42}
 
 
 class KwargsTestCase(unittest.TestCase):
 
-    def test_kwargs(self):
+    def test_kwargs(self) -> None:
         transformer = transforms.Transformer(utils.new_document('test data'))
         transformer.add_transform(TestTransform, foo=42)
         transformer.apply_transforms()

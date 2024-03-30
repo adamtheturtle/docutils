@@ -116,6 +116,7 @@ from docutils.parsers.rst import directives, languages, tableparser, roles
 from docutils.utils import escape2null, column_width
 from docutils.utils import punctuation_chars, roman, urischemes
 from docutils.utils import split_escaped_whitespace
+from typing import Optional, NoReturn
 
 
 class MarkupError(DataError): pass
@@ -129,7 +130,7 @@ class Struct:
 
     """Stores data attributes for dotted-attribute access."""
 
-    def __init__(self, **keywordargs):
+    def __init__(self, **keywordargs) -> None:
         self.__dict__.update(keywordargs)
 
 
@@ -142,7 +143,7 @@ class RSTStateMachine(StateMachineWS):
     """
 
     def run(self, input_lines, document, input_offset=0, match_titles=True,
-            inliner=None):
+            inliner=None) -> None:
         """
         Parse `input_lines` and modify the `document` node in place.
 
@@ -209,12 +210,12 @@ class RSTState(StateWS):
     nested_sm = NestedStateMachine
     nested_sm_cache = []
 
-    def __init__(self, state_machine, debug=False):
+    def __init__(self, state_machine, debug=False) -> None:
         self.nested_sm_kwargs = {'state_classes': state_classes,
                                  'initial_state': 'Body'}
         StateWS.__init__(self, state_machine, debug)
 
-    def runtime_init(self):
+    def runtime_init(self) -> None:
         StateWS.runtime_init(self)
         memo = self.state_machine.memo
         self.memo = memo
@@ -226,7 +227,7 @@ class RSTState(StateWS):
         if not hasattr(self.reporter, 'get_source_and_line'):
             self.reporter.get_source_and_line = self.state_machine.get_source_and_line  # noqa:E501
 
-    def goto_line(self, abs_line_offset):
+    def goto_line(self, abs_line_offset) -> None:
         """
         Jump to input line `abs_line_offset`, ignoring jumps past the end.
         """
@@ -319,12 +320,12 @@ class RSTState(StateWS):
         state_machine.unlink()
         return state_machine.abs_line_offset(), blank_finish
 
-    def section(self, title, source, style, lineno, messages):
+    def section(self, title, source, style, lineno, messages) -> None:
         """Check for a valid subsection and create one if it checks out."""
         if self.check_subsection(source, style, lineno):
             self.new_subsection(title, lineno, messages)
 
-    def check_subsection(self, source, style, lineno):
+    def check_subsection(self, source, style, lineno) -> bool:
         """
         Check for a valid subsection header.  Return True or False.
 
@@ -371,7 +372,7 @@ class RSTState(StateWS):
             line=lineno)
         return error
 
-    def new_subsection(self, title, lineno, messages):
+    def new_subsection(self, title, lineno, messages) -> None:
         """Append new subsection to document tree. On return, check level."""
         memo = self.memo
         mylevel = memo.section_level
@@ -463,12 +464,12 @@ class Inliner:
     Parse inline markup; call the `parse()` method.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.implicit_dispatch = []
         """List of (pattern, bound method) tuples, used by
         `self.implicit_inline`."""
 
-    def init_customizations(self, settings):
+    def init_customizations(self, settings) -> None:
         # lookahead and look-behind expressions for inline markup rules
         if getattr(settings, 'character_level_inline_markup', False):
             start_string_prefix = '(^|(?<!\x00))'
@@ -1387,7 +1388,7 @@ class Body(RSTState):
                 ordinal = None
         return format, sequence, text, ordinal
 
-    def is_enumerated_list_item(self, ordinal, sequence, format):
+    def is_enumerated_list_item(self, ordinal, sequence, format) -> Optional[int]:
         """
         Check validity based on the ordinal value and the second line.
 
@@ -1493,7 +1494,7 @@ class Body(RSTState):
         field = field[:field.rfind(':')]  # strip off trailing ':' etc.
         return field
 
-    def parse_field_body(self, indented, offset, node):
+    def parse_field_body(self, indented, offset, node) -> None:
         self.nested_parse(indented, input_offset=offset, node=node)
 
     def option_marker(self, match, context, next_state):
@@ -1633,13 +1634,13 @@ class Body(RSTState):
             line.indent = len(match.group(1)) - 1
         return line, messages, blank_finish
 
-    def nest_line_block_lines(self, block):
+    def nest_line_block_lines(self, block) -> None:
         for index in range(1, len(block)):
             if getattr(block[index], 'indent', None) is None:
                 block[index].indent = block[index - 1].indent
         self.nest_line_block_segment(block)
 
-    def nest_line_block_segment(self, block):
+    def nest_line_block_segment(self, block) -> None:
         indents = [item.indent for item in block]
         least = min(indents)
         new_items = []
@@ -1999,7 +2000,7 @@ class Body(RSTState):
             return None
         return unescape(match.group('simple') or match.group('phrase'))
 
-    def add_target(self, targetname, refuri, target, lineno):
+    def add_target(self, targetname, refuri, target, lineno) -> None:
         target.line = lineno
         if targetname:
             name = normalize_name(unescape(targetname))
@@ -2088,7 +2089,7 @@ class Body(RSTState):
             substitution_node, subname, self.parent)
         return [substitution_node], blank_finish
 
-    def disallowed_inside_substitution_definitions(self, node):
+    def disallowed_inside_substitution_definitions(self, node) -> bool:
         if (node['ids']
             or isinstance(node, nodes.reference) and node.get('anonymous')
             or isinstance(node, nodes.footnote_reference) and node.get('auto')):  # noqa: E501
@@ -2375,7 +2376,7 @@ class Body(RSTState):
         nodelist, blank_finish = self.comment(match)
         return nodelist + errors, blank_finish
 
-    def explicit_list(self, blank_finish):
+    def explicit_list(self, blank_finish) -> None:
         """
         Create a nested state machine for a series of explicit markup
         constructs (including anonymous hyperlink targets).
@@ -2505,7 +2506,7 @@ class SpecializedBody(Body):
     `Body`.
     """
 
-    def invalid_input(self, match=None, context=None, next_state=None):
+    def invalid_input(self, match=None, context=None, next_state=None) -> NoReturn:
         """Not a compound element member. Abort this state machine."""
         self.state_machine.previous_line()  # back up so parent SM can reassess
         raise EOFError
@@ -2625,7 +2626,7 @@ class ExtensionOptions(FieldList):
     No nested parsing is done (including inline markup parsing).
     """
 
-    def parse_field_body(self, indented, offset, node):
+    def parse_field_body(self, indented, offset, node) -> None:
         """Override `Body.parse_field_body` for simpler parsing."""
         lines = []
         for line in list(indented) + ['']:
@@ -2686,7 +2687,7 @@ class SubstitutionDef(Body):
           'text': r''}
     initial_transitions = ['embedded_directive', 'text']
 
-    def embedded_directive(self, match, context, next_state):
+    def embedded_directive(self, match, context, next_state) -> NoReturn:
         nodelist, blank_finish = self.directive(match,
                                                 alt=self.parent['names'][0])
         self.parent += nodelist
@@ -2694,7 +2695,7 @@ class SubstitutionDef(Body):
             self.blank_finish = blank_finish
         raise EOFError
 
-    def text(self, match, context, next_state):
+    def text(self, match, context, next_state) -> NoReturn:
         if not self.state_machine.at_eof():
             self.blank_finish = self.state_machine.is_next_line_blank()
         raise EOFError
@@ -2907,7 +2908,7 @@ class SpecializedText(Text):
         """Incomplete construct."""
         return []
 
-    def invalid_input(self, match=None, context=None, next_state=None):
+    def invalid_input(self, match=None, context=None, next_state=None) -> NoReturn:
         """Not a compound element member. Abort this state machine."""
         raise EOFError
 
@@ -3050,7 +3051,7 @@ class Line(SpecializedText):
         self.parent += msg
         return [], 'Body', []
 
-    def short_overline(self, context, blocktext, lineno, lines=1):
+    def short_overline(self, context, blocktext, lineno, lines=1) -> None:
         msg = self.reporter.info(
             'Possible incomplete section title.\nTreating the overline as '
             "ordinary text because it's so short.",
@@ -3058,7 +3059,7 @@ class Line(SpecializedText):
         self.parent += msg
         self.state_correction(context, lines)
 
-    def state_correction(self, context, lines=1):
+    def state_correction(self, context, lines=1) -> NoReturn:
         self.state_machine.previous_line(lines)
         context[:] = []
         raise statemachine.StateCorrection('Body', 'text')
@@ -3076,7 +3077,7 @@ class QuotedLiteralBlock(RSTState):
                 'text': r''}
     initial_transitions = ('initial_quoted', 'text')
 
-    def __init__(self, state_machine, debug=False):
+    def __init__(self, state_machine, debug=False) -> None:
         RSTState.__init__(self, state_machine, debug)
         self.messages = []
         self.initial_lineno = None
@@ -3105,7 +3106,7 @@ class QuotedLiteralBlock(RSTState):
         self.parent += self.messages
         return []
 
-    def indent(self, match, context, next_state):
+    def indent(self, match, context, next_state) -> NoReturn:
         assert context, ('QuotedLiteralBlock.indent: context should not '
                          'be empty!')
         self.messages.append(
@@ -3130,7 +3131,7 @@ class QuotedLiteralBlock(RSTState):
         context.append(match.string)
         return context, next_state, []
 
-    def text(self, match, context, next_state):
+    def text(self, match, context, next_state) -> NoReturn:
         if context:
             self.messages.append(
                 self.reporter.error('Inconsistent literal block quoting.',

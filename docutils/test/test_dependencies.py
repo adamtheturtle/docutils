@@ -68,7 +68,7 @@ class RecordDependenciesTests(unittest.TestCase):
         with open(recordfile, encoding='utf-8') as record:
             return record.read().splitlines(), output
 
-    def test_dependencies_xml(self):
+    def test_dependencies_xml(self) -> None:
         # Note: currently, raw input files are read (and hence recorded) while
         # parsing even if not used in the chosen output format.
         # This should change (see parsers/rst/directives/misc.py).
@@ -80,7 +80,7 @@ class RecordDependenciesTests(unittest.TestCase):
         # the order of the files is arbitrary
         self.assertEqual(sorted(expected), sorted(record))
 
-    def test_dependencies_html(self):
+    def test_dependencies_html(self) -> None:
         keys = ['include', 'raw']
         if PIL and (TEST_ROOT == CWD):
             keys += ['figure-image', 'scaled-image']
@@ -95,7 +95,7 @@ class RecordDependenciesTests(unittest.TestCase):
         self.assertEqual(sorted(expected), sorted(record),
                          msg='output is:\n'+output)
 
-    def test_dependencies_latex(self):
+    def test_dependencies_latex(self) -> None:
         # since 0.9, the latex writer records only really accessed files, too.
         # Note: currently, raw input files are read (and hence recorded) while
         # parsing even if not used in the chosen output format.
@@ -111,13 +111,13 @@ class RecordDependenciesTests(unittest.TestCase):
         self.assertEqual(sorted(expected), sorted(record),
                          msg='output is:\n'+output)
 
-    def test_csv_dependencies(self):
+    def test_csv_dependencies(self) -> None:
         csvsource = str(DATA_ROOT / 'csv_dep.txt')
         record, output = self.get_record(source_path=csvsource)
         self.assertEqual([relpath(DATA_ROOT / 'csv_data.txt')], record,
                          msg='output is:\n'+output)
 
-    def test_stylesheet_dependencies(self):
+    def test_stylesheet_dependencies(self) -> None:
         stylesheet = paths['stylesheet']
         settings = {'stylesheet_path': paths['stylesheet'],
                     'stylesheet': None}

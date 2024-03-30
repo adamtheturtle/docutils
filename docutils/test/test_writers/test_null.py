@@ -21,7 +21,7 @@ from docutils.core import publish_string
 
 
 class WriterPublishTestCase(unittest.TestCase):
-    def test_publish(self):
+    def test_publish(self) -> None:
         writer_name = 'null'
         for name, cases in totest.items():
             for casenum, (case_input, case_expected) in enumerate(cases):

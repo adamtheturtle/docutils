@@ -59,7 +59,7 @@ EXPECTED_PATH = os.path.join(FUNCTIONAL_ROOT, 'expected')
 class DocutilsOdtTestCase(unittest.TestCase):
 
     def process_test(self, input_filename, expected_filename,
-                     save_output_name=None, settings_overrides=None):
+                     save_output_name=None, settings_overrides=None) -> None:
         # Test that xmlcharrefreplace is the default output encoding
         # error handler.
         input_path = os.path.join(INPUT_PATH, input_filename)
@@ -94,7 +94,7 @@ class DocutilsOdtTestCase(unittest.TestCase):
             len(content2), len(content1), )
         self.assertEqual(content1, content2, msg)
 
-    def reorder_attributes(self, root):
+    def reorder_attributes(self, root) -> None:
         """
         Make attribute order independent of python version.
         python3.8 is different to previous.
@@ -126,11 +126,11 @@ class DocutilsOdtTestCase(unittest.TestCase):
     # See instructions above in module doc-string.
     #
 
-    def test_odt_basic(self):
+    def test_odt_basic(self) -> None:
         self.process_test('odt_basic.txt', 'odt_basic.odt',
                           save_output_name='odt_basic.odt')
 
-    def test_odt_nested_class(self):
+    def test_odt_nested_class(self) -> None:
         self.process_test('odt_nested_class.txt',
                           'odt_nested_class.odt',
                           save_output_name='odt_nested_class.odt')
@@ -141,11 +141,11 @@ class DocutilsOdtTestCase(unittest.TestCase):
                           'odt_no_class.odt',
                           save_output_name='odt_no_class.odt')
 
-    def test_odt_tables1(self):
+    def test_odt_tables1(self) -> None:
         self.process_test('odt_tables1.txt', 'odt_tables1.odt',
                           save_output_name='odt_tables1.odt')
 
-    def test_odt_custom_headfoot(self):
+    def test_odt_custom_headfoot(self) -> None:
         settings_overrides = {
             'custom_header': 'Page %p% of %P%',
             'custom_footer': 'Title: %t%  Date: %d3%  Time: %t4%',
@@ -155,28 +155,28 @@ class DocutilsOdtTestCase(unittest.TestCase):
                           settings_overrides=settings_overrides,
                           save_output_name='odt_custom_headfoot.odt')
 
-    def test_odt_header_footer(self):
+    def test_odt_header_footer(self) -> None:
         self.process_test('odt_header_footer.txt', 'odt_header_footer.odt',
                           save_output_name='odt_header_footer.odt')
 
-    def test_odt_literal_block(self):
+    def test_odt_literal_block(self) -> None:
         self.process_test('odt_literal_block.txt', 'odt_literal_block.odt')
 
-    def test_odt_contents(self):
+    def test_odt_contents(self) -> None:
         self.process_test('odt_contents.txt', 'odt_contents.odt')
 
-    def test_odt_classifier(self):
+    def test_odt_classifier(self) -> None:
         self.process_test('odt_classifier.txt', 'odt_classifier.odt')
 
-    def test_odt_footnotes(self):
+    def test_odt_footnotes(self) -> None:
         self.process_test('odt_footnotes.txt', 'odt_footnotes.odt',
                           save_output_name='odt_footnotes.odt')
 
-    def test_odt_raw(self):
+    def test_odt_raw(self) -> None:
         self.process_test('odt_raw.txt', 'odt_raw.odt',
                           save_output_name='odt_raw.odt')
 
-    def test_odt_image(self):
+    def test_odt_image(self) -> None:
         self.process_test('odt_image.txt', 'odt_image.odt',
                           save_output_name='odt_image.odt')
 

@@ -24,18 +24,18 @@ from docutils import VersionInfo
 
 class ApplicationErrorTests(unittest.TestCase):
 
-    def test_message(self):
+    def test_message(self) -> None:
         err = docutils.ApplicationError('the message')
         self.assertEqual('the message', str(err))
 
-    def test_non_ASCII_message(self):
+    def test_non_ASCII_message(self) -> None:
         err = docutils.ApplicationError('\u0169')
         self.assertEqual('\u0169', str(err))
 
 
 class VersionInfoTests(unittest.TestCase):
 
-    def test_VersionInfo(self):
+    def test_VersionInfo(self) -> None:
         # arguments may use keywords
         self.assertEqual(VersionInfo(0, 1, 2, 'beta', 3, False),
                          VersionInfo(major=0, minor=1, micro=2,
@@ -46,7 +46,7 @@ class VersionInfoTests(unittest.TestCase):
                          VersionInfo(0, 0, 0, releaselevel='final',
                                      serial=0, release=True))
 
-    def test_VersionInfo_value_check(self):
+    def test_VersionInfo_value_check(self) -> None:
         # releaselevel must be one of ('alpha', 'beta', 'candidate', 'final')
         with self.assertRaises(ValueError):
             VersionInfo(0, 1, 0, 'gamma')
@@ -57,7 +57,7 @@ class VersionInfoTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             VersionInfo(0, 1, releaselevel='final', serial=1)
 
-    def test__version_info__(self):
+    def test__version_info__(self) -> None:
         """Ensure that the current __version_info__ is valid."""
         releaselevels = ('alpha', 'beta', 'candidate', 'final')
 
@@ -70,13 +70,13 @@ class VersionInfoTests(unittest.TestCase):
         self.assertEqual(type(docutils.__version_info__.serial), int)
         self.assertEqual(type(docutils.__version_info__.release), bool)
 
-    def test__version__(self):
+    def test__version__(self) -> None:
         """Test that __version__ is equivalent to __version_info__."""
         self.assertEqual(
             docutils.utils.version_identifier(docutils.__version_info__),
             docutils.__version__, f'{docutils.__version_info__} differs')
 
-    def test_version_info_comparing(self):
+    def test_version_info_comparing(self) -> None:
         """Test comparing of __version_info__ instances."""
 
         # Example development cycle:
@@ -111,7 +111,7 @@ class VersionInfoTests(unittest.TestCase):
         self.assertEqual(versions, devcycle.split())
         self.assertEqual(versioninfos, sorted(versioninfos))
 
-    def test_version_info_tuple_comparing(self):
+    def test_version_info_tuple_comparing(self) -> None:
         """Test comparing of __version_info__ instances to tuples."""
 
         # {<version string>: <version info>}

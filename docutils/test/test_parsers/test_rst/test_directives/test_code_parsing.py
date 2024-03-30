@@ -51,14 +51,14 @@ settings = {'warning_stream': ''}
 @unittest.skipUnless(with_pygments, 'optional module "pygments" not found')
 class CodeParsingTests(unittest.TestCase):
 
-    def test_lexer_error(self):
+    def test_lexer_error(self) -> None:
         output = publish_string(unknown_language, settings_overrides=settings)
         self.assertIn(b'<system_message level="2"', output)
         self.assertIn(b'Cannot analyze code. '
                       b'No Pygments lexer found for "s-lang".', output)
         self.assertIn(b'<literal_block xml:space="preserve">', output)
 
-    def test_lexer_error_workaround(self):
+    def test_lexer_error_workaround(self) -> None:
         output = publish_string(workaround, settings_overrides=settings)
         self.assertNotIn(b'<system_message', output)
         self.assertIn(b'<literal_block classes="code s-lang"', output)

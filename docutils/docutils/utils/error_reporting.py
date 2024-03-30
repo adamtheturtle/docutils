@@ -65,14 +65,14 @@ class SafeString:
     """
 
     def __init__(self, data, encoding=None, encoding_errors='backslashreplace',
-                 decoding_errors='replace'):
+                 decoding_errors='replace') -> None:
         self.data = data
         self.encoding = (encoding or getattr(data, 'encoding', None)
                          or locale_encoding or 'ascii')
         self.encoding_errors = encoding_errors
         self.decoding_errors = decoding_errors
 
-    def __str__(self):
+    def __str__(self) -> str:
         try:
             return str(self.data)
         except UnicodeEncodeError:
@@ -129,7 +129,7 @@ class ErrorString(SafeString):
     """
     Safely report exception type and message.
     """
-    def __str__(self):
+    def __str__(self) -> str:
         return '%s: %s' % (self.data.__class__.__name__,
                            super(ErrorString, self).__str__())
 
@@ -147,7 +147,7 @@ class ErrorOutput:
 
     def __init__(self, stream=None, encoding=None,
                  encoding_errors='backslashreplace',
-                 decoding_errors='replace'):
+                 decoding_errors='replace') -> None:
         """
         :Parameters:
             - `stream`: a file-like object,
@@ -180,7 +180,7 @@ class ErrorOutput:
         self.decoding_errors = decoding_errors
         """Decoding error handler."""
 
-    def write(self, data):
+    def write(self, data) -> None:
         """
         Write `data` to self.stream. Ignore, if self.stream is False.
 
@@ -207,7 +207,7 @@ class ErrorOutput:
                 self.stream.write(unicode(data, self.encoding,
                                           self.decoding_errors))
 
-    def close(self):
+    def close(self) -> None:
         """
         Close the error-output stream.
 

@@ -142,7 +142,7 @@ class DocutilsXMLTestCase(unittest.TestCase):
                 'doctype_declaration': False,
                }
 
-    def test_publish(self):
+    def test_publish(self) -> None:
         settings = self.settings.copy()
         settings['newlines'] = False
         for settings['xml_declaration'] in True, False:
@@ -157,26 +157,26 @@ class DocutilsXMLTestCase(unittest.TestCase):
                 result = publish_xml(settings, source)
                 self.assertEqual(expected.encode('latin1'), result)
 
-    def test_publish_indents(self):
+    def test_publish_indents(self) -> None:
         settings = self.settings.copy()
         settings['indents'] = True
         result = publish_xml(settings, source)
         expected = (generatedby + bodyindents).encode('latin1')
         self.assertEqual(expected, result)
 
-    def test_publish_newlines(self):
+    def test_publish_newlines(self) -> None:
         settings = self.settings.copy()
         result = publish_xml(settings, source)
         expected = (generatedby + bodynewlines).encode('latin1')
         self.assertEqual(expected, result)
 
-    def test_raw_xml(self):
+    def test_raw_xml(self) -> None:
         result = publish_xml(self.settings, raw_xml_source)
         expected = (generatedby
                     + raw_xml).encode('latin1', 'xmlcharrefreplace')
         self.assertEqual(expected, result)
 
-    def test_invalid_raw_xml(self):
+    def test_invalid_raw_xml(self) -> None:
         warnings = StringIO()
         settings = self.settings.copy()
         settings['warning_stream'] = warnings

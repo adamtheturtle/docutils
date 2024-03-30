@@ -40,7 +40,7 @@ class PublishTestCase(unittest.TestCase):
                 'legacy_column_widths': True,
                 }
 
-    def test_publish_from_doctree(self):
+    def test_publish_from_doctree(self) -> None:
         """Ignore the Docutils-generated ToC when ``use_latex_toc`` is True.
 
         (This did happen when publishing from a doctree.)
@@ -55,7 +55,7 @@ class PublishTestCase(unittest.TestCase):
         self.assertNotIn(r'\item \hyperref[foo]{foo}', result)
         # self.assertIn(r'\tableofcontents', result)
 
-    def test_publish_parts(self):
+    def test_publish_parts(self) -> None:
         """Check for the presence of documented parts.
         """
         parts = core.publish_parts(contents_test_input,
@@ -86,7 +86,7 @@ class PublishTestCase(unittest.TestCase):
 
 class WarningsTestCase(unittest.TestCase):
 
-    def test_future_warnings(self):
+    def test_future_warnings(self) -> None:
         """Warn about changing defaults."""
         # Warn only if not set (uncommenting should make test fail):
         settings = {'_disable_config': True,

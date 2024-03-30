@@ -60,7 +60,7 @@ def get_languages():
 class LanguageTestCase(unittest.TestCase):
     maxDiff = None
 
-    def test_labels(self):
+    def test_labels(self) -> None:
         ref_labels = {*REF.labels}
         for language in get_languages():
             with self.subTest(id=f'{language}.py'):
@@ -72,7 +72,7 @@ class LanguageTestCase(unittest.TestCase):
                 self.assertIsNotNone(module)
                 self.assertSetEqual({*module.labels}, ref_labels)
 
-    def test_bibliographic_fields(self):
+    def test_bibliographic_fields(self) -> None:
         ref_fields = {*REF.bibliographic_fields.values()}
         for language in get_languages():
             with self.subTest(id=f'{language}.py'):
@@ -85,7 +85,7 @@ class LanguageTestCase(unittest.TestCase):
                 mod_fields = {*module.bibliographic_fields.values()}
                 self.assertSetEqual(mod_fields, ref_fields)
 
-    def test_directives(self):
+    def test_directives(self) -> None:
         for language in get_languages():
             with self.subTest(id=f'{language}.py'):
                 try:
@@ -100,7 +100,7 @@ class LanguageTestCase(unittest.TestCase):
                     if name != 'restructuredtext-test-directive':
                         self.assertIn(name, set(module.directives.values()))
 
-    def test_roles(self):
+    def test_roles(self) -> None:
         for language in get_languages():
             with self.subTest(id=f'{language}.py'):
                 try:

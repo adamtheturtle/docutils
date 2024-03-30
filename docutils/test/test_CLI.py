@@ -31,12 +31,13 @@ if __name__ == '__main__':
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from docutils import __main__, core
+from typing import NoReturn
 
 # DATA_ROOT is ./test/data/ from the docutils root
 DATA_ROOT = Path(__file__).parent / 'data'
 
 
-def print_mismatch(expected, output):
+def print_mismatch(expected, output) -> NoReturn:
     diff = ''.join(difflib.unified_diff(
                        expected.splitlines(keepends=True),
                        output.splitlines(keepends=True),
@@ -46,14 +47,14 @@ def print_mismatch(expected, output):
 
 class CliTests(unittest.TestCase):
 
-    def setUp(self):
+    def setUp(self) -> None:
         # save state
         self.orig_argv = sys.argv
         self.orig_stdout = sys.stdout
         os.environ['DOCUTILSCONFIG'] = ''  # don't read config files
         sys.stdout = StringIO()  # re-direct sys.stdout
 
-    def tearDown(self):
+    def tearDown(self) -> None:
         del os.environ['DOCUTILSCONFIG']
         sys.stdout = self.orig_stdout
         sys.argv = self.orig_argv
@@ -78,7 +79,7 @@ class CliTests(unittest.TestCase):
             'utf-8:backslashreplace')
         return output
 
-    def test_main_help(self):
+    def test_main_help(self) -> None:
         # collect help text
         output = self.get_help_text('docutils', __main__.main)
 
@@ -89,7 +90,7 @@ class CliTests(unittest.TestCase):
         if expected != output:
             print_mismatch(expected, output)
 
-    def test_rst2html_help(self):
+    def test_rst2html_help(self) -> None:
         # collect help text
         output = self.get_help_text('rst2html', core.rst2html)
         # compare to stored version
@@ -99,7 +100,7 @@ class CliTests(unittest.TestCase):
         if expected != output:
             print_mismatch(expected, output)
 
-    def test_rst2latex_help(self):
+    def test_rst2latex_help(self) -> None:
         # collect help text
         output = self.get_help_text('rst2latex', core.rst2latex)
         # compare to stored version

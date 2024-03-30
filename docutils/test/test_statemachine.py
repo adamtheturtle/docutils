@@ -116,12 +116,12 @@ class MockState(statemachine.StateWS):
 
 class EmptySMTests(unittest.TestCase):
 
-    def setUp(self):
+    def setUp(self) -> None:
         self.sm = statemachine.StateMachine(
               state_classes=[], initial_state='State')
         self.sm.debug = debug
 
-    def test_add_state(self):
+    def test_add_state(self) -> None:
         self.sm.add_state(statemachine.State)
         self.assertTrue(len(self.sm.states) == 1)
         with self.assertRaises(statemachine.DuplicateStateError):
@@ -129,11 +129,11 @@ class EmptySMTests(unittest.TestCase):
         self.sm.add_state(statemachine.StateWS)
         self.assertTrue(len(self.sm.states) == 2)
 
-    def test_add_states(self):
+    def test_add_states(self) -> None:
         self.sm.add_states((statemachine.State, statemachine.StateWS))
         self.assertEqual(len(self.sm.states), 2)
 
-    def test_get_state(self):
+    def test_get_state(self) -> None:
         self.assertRaises(statemachine.UnknownStateError, self.sm.get_state)
         self.sm.add_states((statemachine.State, statemachine.StateWS))
         with self.assertRaises(statemachine.UnknownStateError):
@@ -147,7 +147,7 @@ class EmptySMTests(unittest.TestCase):
 
 class EmptySMWSTests(EmptySMTests):
 
-    def setUp(self):
+    def setUp(self) -> None:
         self.sm = statemachine.StateMachineWS(
               state_classes=[], initial_state='State')
         self.sm.debug = debug
@@ -155,20 +155,20 @@ class EmptySMWSTests(EmptySMTests):
 
 class SMWSTests(unittest.TestCase):
 
-    def setUp(self):
+    def setUp(self) -> None:
         self.sm = statemachine.StateMachineWS([MockState], 'MockState',
                                               debug=debug)
         self.sm.debug = debug
         self.sm.states['MockState'].levelholder[0] = 0
 
-    def tearDown(self):
+    def tearDown(self) -> None:
         self.sm.unlink()
 
-    def test___init__(self):
+    def test___init__(self) -> None:
         self.assertEqual(list(self.sm.states.keys()), ['MockState'])
         self.assertEqual(len(self.sm.states['MockState'].transitions), 4)
 
-    def test_get_indented(self):
+    def test_get_indented(self) -> None:
         self.sm.input_lines = statemachine.StringList(testtext)
         self.sm.line_offset = -1
         self.sm.next_line(3)
@@ -193,7 +193,7 @@ class SMWSTests(unittest.TestCase):
                                   - len(literalblock)))
         self.assertTrue(good)
 
-    def test_get_text_block(self):
+    def test_get_text_block(self) -> None:
         self.sm.input_lines = statemachine.StringList(testtext)
         self.sm.line_offset = -1
         self.sm.next_line()
@@ -203,7 +203,7 @@ class SMWSTests(unittest.TestCase):
         textblock = self.sm.get_text_block()
         self.assertEqual(textblock, testtext[2:4])
 
-    def test_get_text_block_flush_left(self):
+    def test_get_text_block_flush_left(self) -> None:
         self.sm.input_lines = statemachine.StringList(testtext)
         self.sm.line_offset = -1
         self.sm.next_line()
@@ -213,7 +213,7 @@ class SMWSTests(unittest.TestCase):
         with self.assertRaises(statemachine.UnexpectedIndentationError):
             self.sm.get_text_block(flush_left=1)
 
-    def test_run(self):
+    def test_run(self) -> None:
         self.assertEqual(self.sm.run(testtext), expected)
 
 
@@ -223,7 +223,7 @@ class EmptyClass:
 
 class EmptyStateTests(unittest.TestCase):
 
-    def setUp(self):
+    def setUp(self) -> None:
         self.state = statemachine.State(EmptyClass(), debug=debug)
         self.state.patterns = {'nop': 'dummy',
                                'nop2': 'dummy',
@@ -231,7 +231,7 @@ class EmptyStateTests(unittest.TestCase):
                                'bogus': 'dummy'}
         self.state.nop2 = self.state.nop3 = self.state.nop
 
-    def test_add_transitions(self):
+    def test_add_transitions(self) -> None:
         self.assertEqual(len(self.state.transitions), 0)
         self.state.add_transitions(['None'], {'None': None})
         self.assertEqual(len(self.state.transitions), 1)
@@ -240,14 +240,14 @@ class EmptyStateTests(unittest.TestCase):
         with self.assertRaises(statemachine.DuplicateTransitionError):
             self.state.add_transitions(['None'], {'None': None})
 
-    def test_add_transition(self):
+    def test_add_transition(self) -> None:
         self.assertEqual(len(self.state.transitions), 0)
         self.state.add_transition('None', None)
         self.assertEqual(len(self.state.transitions), 1)
         with self.assertRaises(statemachine.DuplicateTransitionError):
             self.state.add_transition('None', None)
 
-    def test_remove_transition(self):
+    def test_remove_transition(self) -> None:
         self.assertEqual(len(self.state.transitions), 0)
         self.state.add_transition('None', None)
         self.assertEqual(len(self.state.transitions), 1)
@@ -256,7 +256,7 @@ class EmptyStateTests(unittest.TestCase):
         with self.assertRaises(statemachine.UnknownTransitionError):
             self.state.remove_transition('None')
 
-    def test_make_transition(self):
+    def test_make_transition(self) -> None:
         dummy = re.compile('dummy')
         self.assertEqual(self.state.make_transition('nop', 'bogus'),
                          (dummy, self.state.nop, 'bogus'))
@@ -268,7 +268,7 @@ class EmptyStateTests(unittest.TestCase):
         with self.assertRaises(statemachine.TransitionMethodNotFound):
             self.state.make_transition('bogus')
 
-    def test_make_transitions(self):
+    def test_make_transitions(self) -> None:
         dummy = re.compile('dummy')
         self.assertEqual(self.state.make_transitions(('nop', ['nop2'],
                                                       ('nop3', 'bogus'))),
@@ -286,7 +286,7 @@ class MiscTests(unittest.TestCase):
     s2l_expected = ['hello   there   how are you?',
                     "        I'm fine        thanks."]
 
-    def test_string2lines(self):
+    def test_string2lines(self) -> None:
         self.assertEqual(statemachine.string2lines(self.s2l_string),
                          self.s2l_expected)
 

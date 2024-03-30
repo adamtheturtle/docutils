@@ -24,7 +24,7 @@ from docutils.core import publish_string
 
 
 class WriterPublishTestCase(unittest.TestCase):
-    def test_publish(self):
+    def test_publish(self) -> None:
         writer_name = 's5'
         settings = {
             '_disable_config': True,

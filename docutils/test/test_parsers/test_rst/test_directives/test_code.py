@@ -32,7 +32,7 @@ else:
 
 
 class ParserTestCase(unittest.TestCase):
-    def test_parser(self):
+    def test_parser(self) -> None:
         if not with_pygments:
             del totest['code_parsing']
 

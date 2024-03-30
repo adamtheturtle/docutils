@@ -30,7 +30,7 @@ class TransformTestCase(unittest.TestCase):
     settings.warning_stream = ''
     parser = Parser()
 
-    def check_output(self, samples, settings):
+    def check_output(self, samples, settings) -> None:
         # yield (output, expected) for each test sample
         for key, (transforms, cases) in samples.items():
             for casenum, (case_input, case_expected) in enumerate(cases):
@@ -47,15 +47,15 @@ class TransformTestCase(unittest.TestCase):
                     document.transformer.apply_transforms()
                     self.assertEqual(case_expected, document.pformat())
 
-    def test_transforms(self):
+    def test_transforms(self) -> None:
         self.check_output(totest, self.settings)
 
-    def test_transforms_de(self):
+    def test_transforms_de(self) -> None:
         settings = self.settings.copy()
         settings.language_code = 'de'
         self.check_output(totest_de, settings)
 
-    def test_transforms_ru(self):
+    def test_transforms_ru(self) -> None:
         settings = self.settings.copy()
         settings.language_code = 'ru'
         self.check_output(totest_ru, settings)

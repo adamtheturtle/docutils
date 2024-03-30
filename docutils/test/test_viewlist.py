@@ -26,19 +26,19 @@ class ViewListTests(unittest.TestCase):
     b_list = list('AEIOU')
     c_list = list('XYZ')
 
-    def setUp(self):
+    def setUp(self) -> None:
         self.a = statemachine.ViewList(self.a_list, 'a')
         self.b = statemachine.ViewList(self.b_list, 'b')
         self.c = statemachine.ViewList(self.c_list, 'c')
 
-    def test_xitems(self):
+    def test_xitems(self) -> None:
         self.assertEqual(list(self.b.xitems()),
                          [('b', 0, 'A'), ('b', 1, 'E'),
                           ('b', 2, 'I'), ('b', 3, 'O'), ('b', 4, 'U')])
         self.assertEqual(list(self.c.xitems()),
                          [('c', 0, 'X'), ('c', 1, 'Y'), ('c', 2, 'Z')])
 
-    def test_lists(self):
+    def test_lists(self) -> None:
         # be compatible to standard lists whenever sensible:
         self.assertEqual(self.a, self.a_list)
         self.assertEqual(str(self.a), str(self.a_list))
@@ -57,7 +57,7 @@ class ViewListTests(unittest.TestCase):
         self.assertEqual(self.a.items,
                          [('a', i) for (i, v) in enumerate(self.a_list)])
 
-    def test_special_class_methods(self):
+    def test_special_class_methods(self) -> None:
         # `repr` returns instantiation expression
         self.assertEqual(repr(self.a), "ViewList(%s, items=%s)" %
                          (repr(self.a_list), repr(self.a.items)))
@@ -76,14 +76,14 @@ class ViewListTests(unittest.TestCase):
         self.assertEqual(self.a, self.a_list + self.b_list)
         # self.assertEqual(self.a.items, self.a.items + self.b.items)
 
-    def test_get_slice(self):
+    def test_get_slice(self) -> None:
         a = self.a[1:-1]
         a_list = self.a_list[1:-1]
         self.assertEqual(a, a_list)
         self.assertEqual(a.items, [('a', i+1) for (i, v) in enumerate(a_list)])
         self.assertEqual(a.parent, self.a)
 
-    def test_set_slice(self):
+    def test_set_slice(self) -> None:
         a = statemachine.ViewList(self.a[:])
         s = a[2:-2]
         s[2:2] = self.b
@@ -93,7 +93,7 @@ class ViewListTests(unittest.TestCase):
         self.assertEqual(s, a[2:-2])
         self.assertEqual(s.items, a[2:-2].items)
 
-    def test_del_slice(self):
+    def test_del_slice(self) -> None:
         a = statemachine.ViewList(self.a[:])
         s = a[2:]
         s_list = self.a_list[2:]
@@ -103,7 +103,7 @@ class ViewListTests(unittest.TestCase):
         self.assertEqual(s, a[2:])
         self.assertEqual(s.items, a[2:].items)
 
-    def test_insert(self):
+    def test_insert(self) -> None:
         a_list = self.a_list[:]
         a_list.insert(2, 'Q')
         a_list[4:4] = self.b_list
@@ -115,7 +115,7 @@ class ViewListTests(unittest.TestCase):
         self.assertEqual(a.info(2), ('runtime', 0))
         self.assertEqual(a.info(5), ('b', 1))
 
-    def test_append(self):
+    def test_append(self) -> None:
         a_list = self.a_list[:]
         a_list.append('Q')
         a_list.extend(self.b_list)
@@ -126,7 +126,7 @@ class ViewListTests(unittest.TestCase):
         self.assertEqual(a.info(len(self.a)), ('runtime', 0))
         self.assertEqual(a.info(-2), ('b', len(self.b) - 2))
 
-    def test_extend(self):
+    def test_extend(self) -> None:
         a_list = self.a_list[:]
         a_list.extend(self.b_list)
         a = statemachine.ViewList(self.a)
@@ -134,7 +134,7 @@ class ViewListTests(unittest.TestCase):
         self.assertEqual(a, a_list)
         self.assertEqual(a.info(len(self.a) + 1), ('b', 1))
 
-    def test_view(self):
+    def test_view(self) -> None:
         a = statemachine.ViewList(self.a[:])
         a.insert(4, self.b)
         s = a[2:-2]
@@ -148,7 +148,7 @@ class ViewListTests(unittest.TestCase):
         self.assertEqual(s, a[2:-2])
         self.assertEqual(s.items, a[2:-2].items)
 
-    def test_trim(self):
+    def test_trim(self) -> None:
         a = statemachine.ViewList(self.a[:])
         s = a[1:-1]
         s.trim_start(1)
@@ -158,7 +158,7 @@ class ViewListTests(unittest.TestCase):
         self.assertEqual(a, self.a)
         self.assertEqual(s, a[2:-2])
 
-    def test_info(self):
+    def test_info(self) -> None:
         ab = self.a + self.b
         self.assertEqual(ab.info(0), ('a', 0))
         self.assertEqual(ab.info(-1), ('b', len(self.b)-1))
@@ -168,13 +168,13 @@ class ViewListTests(unittest.TestCase):
         self.assertEqual(ab.source(-1), 'b')
         self.assertEqual(ab.offset(-1), len(self.b)-1)
 
-    def test_reverse(self):
+    def test_reverse(self) -> None:
         c = self.c[:]
         c.reverse()
         self.assertEqual(list(c.xitems()),
                          [('c', 2, 'Z'), ('c', 1, 'Y'), ('c', 0, 'X')])
 
-    def test_sort(self):
+    def test_sort(self) -> None:
         c = self.c[:]
         c.reverse()
         c.sort()
@@ -198,16 +198,16 @@ Unindented text.
       literal
            block"""
 
-    def setUp(self):
+    def setUp(self) -> None:
         self.a_list = self.text.splitlines(True)
         self.a = statemachine.StringList(self.a_list, 'a')
 
-    def test_trim_left(self):
+    def test_trim_left(self) -> None:
         s = self.a[3:5]
         s.trim_left(4)
         self.assertEqual(s, [line.lstrip() for line in self.a_list[3:5]])
 
-    def test_get_indented(self):
+    def test_get_indented(self) -> None:
         self.assertEqual(self.a.get_indented(),
                          ([], 0, 0))
         block = statemachine.StringList(

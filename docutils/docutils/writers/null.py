@@ -20,6 +20,6 @@ class Writer(writers.UnfilteredWriter):
     config_section = 'null writer'
     config_section_dependencies = ('writers',)
 
-    def translate(self):
+    def translate(self) -> None:
         # output = None   # TODO in 0.22
         pass

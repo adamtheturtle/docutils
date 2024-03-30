@@ -74,7 +74,7 @@ class Parser(CommonMarkParser):
     def get_transforms(self):
         return Component.get_transforms(self)  # + [AutoStructify]
 
-    def parse(self, inputstring, document):
+    def parse(self, inputstring, document) -> None:
         """Use the upstream parser and clean up afterwards.
         """
         # check for exorbitantly long lines
@@ -134,7 +134,7 @@ class Parser(CommonMarkParser):
                                                     reference.astext())
             node.parent.replace(node, reference)
 
-    def visit_document(self, node):
+    def visit_document(self, node) -> None:
         """Dummy function to prevent spurious warnings.
 
         cf. https://github.com/readthedocs/recommonmark/issues/177
@@ -143,5 +143,5 @@ class Parser(CommonMarkParser):
 
     # Overwrite parent method with version that
     # doesn't pass deprecated `rawsource` argument to nodes.Text:
-    def visit_text(self, mdnode):
+    def visit_text(self, mdnode) -> None:
         self.current_node.append(nodes.Text(mdnode.literal))

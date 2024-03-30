@@ -27,7 +27,7 @@ from test.test_parsers.test_rst.test_directives.test_code \
 
 @unittest.skipUnless(with_pygments, 'needs Pygments')
 class ParserTestCase(unittest.TestCase):
-    def test_parser(self):
+    def test_parser(self) -> None:
         parser = Parser()
         settings = get_default_settings(Parser)
         settings.warning_stream = ''

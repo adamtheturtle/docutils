@@ -28,7 +28,7 @@ from docutils.utils import new_document
 
 
 class TransformTestCase(unittest.TestCase):
-    def setUp(self):
+    def setUp(self) -> None:
         """
         The "info" system-messages for directive fallbacks are only generated
         once (the name -> directive mapping is cached in
@@ -40,7 +40,7 @@ class TransformTestCase(unittest.TestCase):
         directives._directives.clear()
         get_language.cache.clear()
 
-    def test_transforms(self):
+    def test_transforms(self) -> None:
         parser = Parser()
         settings = get_default_settings(Parser)
         settings.warning_stream = ''

@@ -34,7 +34,7 @@ class Html4WriterPublishPartsTestCase(unittest.TestCase):
 
     maxDiff = None
 
-    def test_publish(self):
+    def test_publish(self) -> None:
         writer_name = 'html4'
         for name, (settings_overrides, cases) in totest.items():
             for casenum, (case_input, case_expected) in enumerate(cases):

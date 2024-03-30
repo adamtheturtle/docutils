@@ -31,11 +31,11 @@ class ReporterTests(unittest.TestCase):
     stream = StringIO()
     reporter = utils.Reporter('test data', 2, 4, stream, 1)
 
-    def setUp(self):
+    def setUp(self) -> None:
         self.stream.seek(0)
         self.stream.truncate()
 
-    def test_level0(self):
+    def test_level0(self) -> None:
         sw = self.reporter.system_message(0, 'debug output')
         self.assertEqual(sw.pformat(), """\
 <system_message level="0" source="test data" type="DEBUG">
@@ -45,7 +45,7 @@ class ReporterTests(unittest.TestCase):
         self.assertEqual(self.stream.getvalue(),
                          'test data:: (DEBUG/0) debug output\n')
 
-    def test_level1(self):
+    def test_level1(self) -> None:
         sw = self.reporter.system_message(1, 'a little reminder')
         self.assertEqual(sw.pformat(), """\
 <system_message level="1" source="test data" type="INFO">
@@ -54,7 +54,7 @@ class ReporterTests(unittest.TestCase):
 """)
         self.assertEqual(self.stream.getvalue(), '')
 
-    def test_level2(self):
+    def test_level2(self) -> None:
         sw = self.reporter.system_message(2, 'a warning')
         self.assertEqual(sw.pformat(), """\
 <system_message level="2" source="test data" type="WARNING">
@@ -64,7 +64,7 @@ class ReporterTests(unittest.TestCase):
         self.assertEqual(self.stream.getvalue(),
                          'test data:: (WARNING/2) a warning\n')
 
-    def test_level3(self):
+    def test_level3(self) -> None:
         sw = self.reporter.system_message(3, 'an error')
         self.assertEqual(sw.pformat(), """\
 <system_message level="3" source="test data" type="ERROR">
@@ -74,14 +74,14 @@ class ReporterTests(unittest.TestCase):
         self.assertEqual(self.stream.getvalue(),
                          'test data:: (ERROR/3) an error\n')
 
-    def test_level4(self):
+    def test_level4(self) -> None:
         with self.assertRaises(utils.SystemMessage):
             self.reporter.system_message(
                 4, 'a severe error, raises an exception')
         self.assertEqual(self.stream.getvalue(), 'test data:: (SEVERE/4) '
                          'a severe error, raises an exception\n')
 
-    def test_unicode_message(self):
+    def test_unicode_message(self) -> None:
         sw = self.reporter.system_message(0, 'mesidʒ')
         self.assertEqual(sw.pformat(), """\
 <system_message level="0" source="test data" type="DEBUG">
@@ -89,7 +89,7 @@ class ReporterTests(unittest.TestCase):
         mesidʒ
 """)
 
-    def test_unicode_message_from_exception(self):
+    def test_unicode_message_from_exception(self) -> None:
         """Workaround for Python < 2.6 bug:
         unicode(<exception instance>) uses __str__
         and hence fails with unicode message"""
@@ -109,17 +109,17 @@ class QuietReporterTests(unittest.TestCase):
     stream = StringIO()
     reporter = utils.Reporter('test data', 5, 5, stream, 0)
 
-    def setUp(self):
+    def setUp(self) -> None:
         self.stream.seek(0)
         self.stream.truncate()
 
-    def test_debug(self):
+    def test_debug(self) -> None:
         sw = self.reporter.debug('a debug message')
         # None because debug is disabled.
         self.assertEqual(sw, None)
         self.assertEqual(self.stream.getvalue(), '')
 
-    def test_info(self):
+    def test_info(self) -> None:
         sw = self.reporter.info('an informational message')
         self.assertEqual(sw.pformat(), """\
 <system_message level="1" source="test data" type="INFO">
@@ -128,7 +128,7 @@ class QuietReporterTests(unittest.TestCase):
 """)
         self.assertEqual(self.stream.getvalue(), '')
 
-    def test_warning(self):
+    def test_warning(self) -> None:
         sw = self.reporter.warning('a warning')
         self.assertEqual(sw.pformat(), """\
 <system_message level="2" source="test data" type="WARNING">
@@ -137,7 +137,7 @@ class QuietReporterTests(unittest.TestCase):
 """)
         self.assertEqual(self.stream.getvalue(), '')
 
-    def test_error(self):
+    def test_error(self) -> None:
         sw = self.reporter.error('an error')
         self.assertEqual(sw.pformat(), """\
 <system_message level="3" source="test data" type="ERROR">
@@ -146,7 +146,7 @@ class QuietReporterTests(unittest.TestCase):
 """)
         self.assertEqual(self.stream.getvalue(), '')
 
-    def test_severe(self):
+    def test_severe(self) -> None:
         sw = self.reporter.severe('a severe error')
         self.assertEqual(sw.pformat(), """\
 <system_message level="4" source="test data" type="SEVERE">
@@ -158,7 +158,7 @@ class QuietReporterTests(unittest.TestCase):
 
 class NameValueTests(unittest.TestCase):
 
-    def test_extract_name_value(self):
+    def test_extract_name_value(self) -> None:
         with self.assertRaises(utils.NameValueError):
             utils.extract_name_value('hello')
         with self.assertRaises(utils.NameValueError):
@@ -183,7 +183,7 @@ class ExtensionOptionTests(unittest.TestCase):
     optionspec = {'a': int, 'bbb': float, 'cdef': (lambda x: x),
                   'empty': (lambda x: x)}
 
-    def test_assemble_option_dict(self):
+    def test_assemble_option_dict(self) -> None:
         input = utils.extract_name_value('a=1 bbb=2.0 cdef=hol%s' % chr(224))
         self.assertEqual(
               utils.assemble_option_dict(input, self.optionspec),
@@ -195,7 +195,7 @@ class ExtensionOptionTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             utils.assemble_option_dict(input, self.optionspec)
 
-    def test_extract_extension_options(self):
+    def test_extract_extension_options(self) -> None:
         field_list = nodes.field_list()
         field_list += nodes.field(
               '', nodes.field_name('', 'a'),
@@ -243,7 +243,7 @@ class HelperFunctionTests(unittest.TestCase):
     # Test conversion from `version information tuple` to a PEP 440 compliant
     # Docutils version identifier.
     # See 'Version Numbering' in docs/dev/policies.txt.
-    def test_version_identifier(self):
+    def test_version_identifier(self) -> None:
         release_0_14_final = docutils.VersionInfo(
             major=0, minor=14, micro=0,
             releaselevel='final', serial=0, release=True)
@@ -257,12 +257,12 @@ class HelperFunctionTests(unittest.TestCase):
             releaselevel='candidate', serial=1, release=True)
         self.assertEqual(utils.version_identifier(release_0_14_rc1), '0.14rc1')
 
-    def test_implicit_version_identifier(self):
+    def test_implicit_version_identifier(self) -> None:
         self.assertEqual(
             utils.version_identifier(docutils.__version_info__),
             utils.version_identifier())
 
-    def test_normalize_language_tag(self):
+    def test_normalize_language_tag(self) -> None:
         self.assertEqual(utils.normalize_language_tag('de'), ['de'])
         self.assertEqual(utils.normalize_language_tag('de-AT'),
                          ['de-at', 'de'])
@@ -275,7 +275,7 @@ class HelperFunctionTests(unittest.TestCase):
                          ['grc-ibycus-x-altquot', 'grc-ibycus',
                           'grc-x-altquot', 'grc'])
 
-    def test_xml_declaration(self):
+    def test_xml_declaration(self) -> None:
         # default is no encoding declaration
         self.assertEqual(utils.xml_declaration(), '<?xml version="1.0"?>\n')
         # if an encoding is passed, declare it
@@ -293,12 +293,12 @@ class HelperFunctionTests(unittest.TestCase):
         self.assertEqual(utils.xml_declaration('%s'),
                          '<?xml version="1.0" encoding="%s"?>\n')
 
-    def test_column_width(self):
+    def test_column_width(self) -> None:
         self.assertEqual(utils.column_width('de'), 2)
         self.assertEqual(utils.column_width('dâ'), 2)  # pre-composed
         self.assertEqual(utils.column_width('dâ'), 2)  # combining
 
-    def test_decode_path(self):
+    def test_decode_path(self) -> None:
         try:
             bytes_filename = 'späm'.encode(sys.getfilesystemencoding())
         except UnicodeEncodeError:
@@ -315,7 +315,7 @@ class HelperFunctionTests(unittest.TestCase):
         self.assertTrue(isinstance(defaultpath, str))
         self.assertRaises(ValueError, utils.decode_path, 13)
 
-    def test_relative_path(self):
+    def test_relative_path(self) -> None:
         # Build and return a path to `target`, relative to `source`:
         # Use '/' as path sep in result.
         self.assertEqual(utils.relative_path('spam', 'spam'), '')
@@ -352,7 +352,7 @@ class HelperFunctionTests(unittest.TestCase):
         target = os.path.join('eggs', 'fileB')
         self.assertEqual(utils.relative_path(None, target), 'eggs/fileB')
 
-    def test_find_file_in_dirs(self):
+    def test_find_file_in_dirs(self) -> None:
         # Search for file `path` in the sequence of directories `dirs`.
         # Return the first expansion that matches an existing file.
         dirs = (os.path.join(TEST_ROOT, 'nonex'),
@@ -377,11 +377,11 @@ class HelperFunctionTests(unittest.TestCase):
               + ' in\x00side no\x00 space\x00')
     unescaped = r'escapes: *one, \*two, \*three inside nospace'
 
-    def test_escape2null(self):
+    def test_escape2null(self) -> None:
         nulled = utils.escape2null(self.escaped)
         self.assertEqual(nulled, self.nulled)
 
-    def test_unescape(self):
+    def test_unescape(self) -> None:
         unescaped = utils.unescape(self.nulled)
         self.assertEqual(unescaped, self.unescaped)
         restored = utils.unescape(self.nulled, restore_backslashes=True)
@@ -392,7 +392,7 @@ class StylesheetFunctionTests(unittest.TestCase):
 
     stylesheet_dirs = [TEST_ROOT, os.path.join(TEST_ROOT, 'data')]
 
-    def test_get_stylesheet_list_stylesheet_path(self):
+    def test_get_stylesheet_list_stylesheet_path(self) -> None:
         # look for stylesheets in stylesheet_dirs
         self.stylesheet = None
         self.stylesheet_path = 'ham.css, missing.css'
@@ -401,7 +401,7 @@ class StylesheetFunctionTests(unittest.TestCase):
         self.assertEqual(utils.get_stylesheet_list(self),
                          [ham_css, 'missing.css'])
 
-    def test_get_stylesheet_list_stylesheet(self):
+    def test_get_stylesheet_list_stylesheet(self) -> None:
         # use stylesheet paths verbatim
         self.stylesheet = 'ham.css, missing.css'
         self.stylesheet_path = None
@@ -409,7 +409,7 @@ class StylesheetFunctionTests(unittest.TestCase):
         self.assertEqual(utils.get_stylesheet_list(self),
                          ['ham.css', 'missing.css'])
 
-    def test_get_stylesheet_list_conflict(self):
+    def test_get_stylesheet_list_conflict(self) -> None:
         # settings "stylesheet_path" and "stylesheet"
         # must not be used together
         self.stylesheet = 'ham.css, missing.css'
@@ -425,11 +425,11 @@ class MathTests(unittest.TestCase):
              (r'a + 2b = c \\ 3a + b = 2c', 'align*'),
              ]
 
-    def test_pick_math_environment(self):
+    def test_pick_math_environment(self) -> None:
         for sample, result in self.tests:
             self.assertEqual(utils.math.pick_math_environment(sample), result)
 
-    def test_wrap_math_code(self):
+    def test_wrap_math_code(self) -> None:
         for sample, env in self.tests:
             self.assertEqual(utils.math.wrap_math_code(sample, as_block=False),
                              f'${sample}$')

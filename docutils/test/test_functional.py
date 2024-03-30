@@ -72,7 +72,7 @@ class FunctionalTests(unittest.TestCase):
 
     """Test case for one config file."""
 
-    def setUp(self):
+    def setUp(self) -> None:
         """Clear output directory."""
         for entry in OUTPUT.rglob('*'):
             if entry.is_dir():
@@ -80,7 +80,7 @@ class FunctionalTests(unittest.TestCase):
             elif entry.name != 'README.txt':
                 entry.unlink()
 
-    def test_functional(self):
+    def test_functional(self) -> None:
         """Process test file."""
         for test_file in TESTS.glob("*.py"):
             with self.subTest(test_file=test_file.as_posix()):

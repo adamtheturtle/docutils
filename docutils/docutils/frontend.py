@@ -66,7 +66,7 @@ import docutils
 from docutils import io, utils
 
 
-def store_multiple(option, opt, value, parser, *args, **kwargs):
+def store_multiple(option, opt, value, parser, *args, **kwargs) -> None:
     """
     Store multiple values in `parser.values`.  (Option callback.)
 
@@ -79,7 +79,7 @@ def store_multiple(option, opt, value, parser, *args, **kwargs):
         setattr(parser.values, key, value)
 
 
-def read_config_file(option, opt, value, parser):
+def read_config_file(option, opt, value, parser) -> None:
     """
     Read a configuration file during option processing.  (Option callback.)
     """
@@ -376,7 +376,7 @@ def validate_smartquotes_locales(setting, value=None, option_parser=None,
     return lc_quotes
 
 
-def make_paths_absolute(pathdict, keys, base_path=None):
+def make_paths_absolute(pathdict, keys, base_path=None) -> None:
     """
     Interpret filesystem path settings relative to the `base_path` given.
 
@@ -438,7 +438,7 @@ class Values(optparse.Values):
     Deprecated. Will be removed.
     """
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         warnings.warn('frontend.Values class will be removed '
                       'in Docutils 0.21 or later.',
                       DeprecationWarning, stacklevel=2)
@@ -447,7 +447,7 @@ class Values(optparse.Values):
             # Set up dummy dependency list.
             self.record_dependencies = utils.DependencyList()
 
-    def update(self, other_dict, option_parser):
+    def update(self, other_dict, option_parser) -> None:
         if isinstance(other_dict, Values):
             other_dict = other_dict.__dict__
         other_dict = dict(other_dict)  # also works with ConfigParser sections
@@ -483,7 +483,7 @@ class Option(optparse.Option):
 
     ATTRS = optparse.Option.ATTRS + ['validator', 'overrides']
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         warnings.warn('The frontend.Option class will be removed '
                       'in Docutils 0.21 or later.',
                       DeprecationWarning, stacklevel=2)
@@ -749,7 +749,7 @@ class OptionParser(optparse.OptionParser, docutils.SettingsSpec):
     """Default version message."""
 
     def __init__(self, components=(), defaults=None, read_config_files=False,
-                 *args, **kwargs):
+                 *args, **kwargs) -> None:
         """Set up OptionParser instance.
 
         `components` is a list of Docutils components each containing a
@@ -784,7 +784,7 @@ class OptionParser(optparse.OptionParser, docutils.SettingsSpec):
                 self.error(err)
             self.defaults.update(config_settings.__dict__)
 
-    def populate_from_components(self, components):
+    def populate_from_components(self, components) -> None:
         """Collect settings specification from components.
 
         For each component, populate from the `SettingsSpec.settings_spec`
@@ -881,7 +881,7 @@ class OptionParser(optparse.OptionParser, docutils.SettingsSpec):
                        'destination.  It will clobber the source file.')
         return source, destination
 
-    def set_defaults_from_dict(self, defaults):
+    def set_defaults_from_dict(self, defaults) -> None:
         # not used, deprecated, will be removed
         self.defaults.update(defaults)
 
@@ -967,7 +967,7 @@ Skipping "%s" configuration file.
                 self.validate_settings(filename, option_parser)
         return read_ok
 
-    def handle_old_config(self, filename):
+    def handle_old_config(self, filename) -> None:
         warnings.warn_explicit(self.old_warning, ConfigDeprecationWarning,
                                filename, 0)
         options = self.get_section('options')
@@ -985,7 +985,7 @@ Skipping "%s" configuration file.
                 self.set(section, setting, value)
         self.remove_section('options')
 
-    def validate_settings(self, filename, option_parser):
+    def validate_settings(self, filename, option_parser) -> None:
         """
         Call the validator function and implement overrides on all applicable
         settings.

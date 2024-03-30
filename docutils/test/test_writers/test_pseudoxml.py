@@ -23,7 +23,7 @@ from docutils.core import publish_string
 class WriterPublishTestCase(unittest.TestCase):
     maxDiff = None
 
-    def test_publish(self):
+    def test_publish(self) -> None:
         writer_name = 'pseudoxml'
 
         for name, cases in totest.items():

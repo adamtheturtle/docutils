@@ -55,7 +55,7 @@ class SafeStringTests(unittest.TestCase):
     wbe = SafeString(be)
     wue = SafeString(ue)
 
-    def test_7bit(self):
+    def test_7bit(self) -> None:
         # wrapping (not required with 7-bit chars) must not change the
         # result of conversions:
         bs7 = b'foo'
@@ -67,7 +67,7 @@ class SafeStringTests(unittest.TestCase):
         self.assertEqual(str(be7), str(SafeString(be7)))
         self.assertEqual(str(ue7), str(SafeString(ue7)))
 
-    def test_ustr(self):
+    def test_ustr(self) -> None:
         """Test conversion to a unicode-string."""
         # unicode(self.bs) fails
         self.assertEqual(str, type(str(self.wbs)))
@@ -78,7 +78,7 @@ class SafeStringTests(unittest.TestCase):
         self.assertEqual(str, type(str(self.wue)))
         self.assertEqual(self.us, str(self.wue))
 
-    def test_str(self):
+    def test_str(self) -> None:
         """Test conversion to a string
 
         (bytes in Python 2, unicode in Python 3).
@@ -93,7 +93,7 @@ class ErrorStringTests(unittest.TestCase):
     bs = b'\xc3\xbc' # unicode(bs) fails, str(bs) in Python 3 return repr()
     us = u'\xfc'     # bytes(us) fails; str(us) fails in Python 2
 
-    def test_str(self):
+    def test_str(self) -> None:
         self.assertEqual('Exception: spam',
                          str(ErrorString(Exception('spam'))))
         self.assertEqual('IndexError: '+str(self.bs),
@@ -101,7 +101,7 @@ class ErrorStringTests(unittest.TestCase):
         self.assertEqual('ImportError: %s' % SafeString(self.us),
                          str(ErrorString(ImportError(self.us))))
 
-    def test_unicode(self):
+    def test_unicode(self) -> None:
         self.assertEqual(u'Exception: spam',
                          str(ErrorString(Exception(u'spam'))))
         self.assertEqual(u'IndexError: '+self.us,
@@ -115,7 +115,7 @@ class ErrorStringTests(unittest.TestCase):
 
 # Stub: Buffer with 'strict' auto-conversion of input to byte string:
 class BBuf(BytesIO):
-    def write(self, data):
+    def write(self, data) -> None:
         if isinstance(data, str):
             data.encode('ascii', 'strict')
         super(BBuf, self).write(data)
@@ -123,7 +123,7 @@ class BBuf(BytesIO):
 
 # Stub: Buffer expecting unicode string:
 class UBuf(StringIO):
-    def write(self, data):
+    def write(self, data) -> None:
         # emulate Python 3 handling of stdout, stderr
         if isinstance(data, bytes):
             raise TypeError('must be unicode, not bytes')
@@ -131,11 +131,11 @@ class UBuf(StringIO):
 
 
 class ErrorOutputTests(unittest.TestCase):
-    def test_defaults(self):
+    def test_defaults(self) -> None:
         e = ErrorOutput()
         self.assertEqual(e.stream, sys.stderr)
 
-    def test_bbuf(self):
+    def test_bbuf(self) -> None:
         buf = BBuf() # buffer storing byte string
         e = ErrorOutput(buf, encoding='ascii')
         # write byte-string as-is
@@ -153,7 +153,7 @@ class ErrorOutputTests(unittest.TestCase):
         e.write(u' u\xfc')
         self.assertEqual(buf.getvalue(), b'b\xfc u\\xfc e\\xfc u\xc3\xbc')
 
-    def test_ubuf(self):
+    def test_ubuf(self) -> None:
         buf = UBuf() # buffer only accepting unicode string
         # decode of binary strings
         e = ErrorOutput(buf, encoding='ascii')
@@ -203,7 +203,7 @@ class SafeStringTests_locale(unittest.TestCase):
     wbose = SafeString(bose)
     wuose = SafeString(uose)
 
-    def test_ustr(self):
+    def test_ustr(self) -> None:
         """Test conversion to a unicode-string."""
         # unicode(bioe) fails with e.g. 'ru_RU.utf8' locale
         self.assertEqual(str, type(str(self.wbioe)))
@@ -211,7 +211,7 @@ class SafeStringTests_locale(unittest.TestCase):
         self.assertEqual(str, type(str(self.wbose)))
         self.assertEqual(str, type(str(self.wuose)))
 
-    def test_str(self):
+    def test_str(self) -> None:
         """Test conversion to a string
 
         (bytes in Python 2, unicode in Python 3).
@@ -242,18 +242,18 @@ class ErrorReportingTests(unittest.TestCase):
     settings.warning_stream = ''
     document = utils.new_document('test data', settings)
 
-    def test_include(self):
+    def test_include(self) -> None:
         source = '.. include:: bogus.txt'
         self.assertRaises(utils.SystemMessage,
                           self.parser.parse, source, self.document)
 
-    def test_raw_file(self):
+    def test_raw_file(self) -> None:
         source = ('.. raw:: html\n'
                   '   :file: bogus.html\n')
         self.assertRaises(utils.SystemMessage,
                           self.parser.parse, source, self.document)
 
-    def test_csv_table(self):
+    def test_csv_table(self) -> None:
         source = ('.. csv-table:: external file\n'
                   '   :file: bogus.csv\n')
         self.assertRaises(utils.SystemMessage,

@@ -21,7 +21,7 @@ math_map = {}
 class Visitor:
     """Node visitor for contents of unicode.xml."""
 
-    def visit_character(self, node):
+    def visit_character(self, node) -> None:
         for n in node.childNodes:
             if n.nodeName == 'latex':
                 code = node.attributes['dec'].value
@@ -40,7 +40,7 @@ class Visitor:
                     text_map[chr(int(code))] = '{%s}' % latex_code
 
 
-def call_visitor(node, visitor=Visitor()):
+def call_visitor(node, visitor=Visitor()) -> None:
     if isinstance(node, minidom.Text):
         name = 'Text'
     else:

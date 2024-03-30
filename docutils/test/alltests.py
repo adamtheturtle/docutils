@@ -37,18 +37,18 @@ class Tee:
 
     """Write to a file and a stream (default: stdout) simultaneously."""
 
-    def __init__(self, filename, stream=sys.__stdout__):
+    def __init__(self, filename, stream=sys.__stdout__) -> None:
         self.file = open(filename, 'w', encoding='utf-8',
                          errors='backslashreplace')
         atexit.register(self.close)
         self.stream = stream
         self.encoding = getattr(stream, 'encoding', None)
 
-    def close(self):
+    def close(self) -> None:
         self.file.close()
         self.file = None
 
-    def write(self, string):
+    def write(self, string) -> None:
         try:
             self.stream.write(string)
         except UnicodeEncodeError:
@@ -57,7 +57,7 @@ class Tee:
         if self.file:
             self.file.write(string)
 
-    def flush(self):
+    def flush(self) -> None:
         self.stream.flush()
         if self.file:
             self.file.flush()
@@ -71,7 +71,7 @@ import unittest  # NoQA: E402
 
 class NumbersTestResult(unittest.TextTestResult):
     """Result class that counts subTests."""
-    def addSubTest(self, test, subtest, error):
+    def addSubTest(self, test, subtest, error) -> None:
         super().addSubTest(test, subtest, error)
         self.testsRun += 1
         if self.dots:

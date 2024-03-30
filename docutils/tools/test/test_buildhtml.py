@@ -73,7 +73,7 @@ class BuildHtmlTests(unittest.TestCase):
             "_tmp_test_tree/dir2/sub/two.txt",
             )
 
-    def setUp(self):
+    def setUp(self) -> None:
         self.root = tempfile.mkdtemp()
 
         for s in self.tree:
@@ -85,7 +85,7 @@ class BuildHtmlTests(unittest.TestCase):
                 fd_s.write("dummy")
                 fd_s.close()
 
-    def tearDown(self):
+    def tearDown(self) -> None:
         for i in range(len(self.tree) - 1, -1, -1):
             s = os.path.join(self.root, self.tree[i])
             if "." not in s:
@@ -94,12 +94,12 @@ class BuildHtmlTests(unittest.TestCase):
                 os.remove(s)
         os.rmdir(self.root)
 
-    def test_1(self):
+    def test_1(self) -> None:
         opts = ["--dry-run", self.root]
         dirs, files = process_and_return_filelist(opts)
         self.assertEqual(files.count("one.txt"), 4)
 
-    def test_local(self):
+    def test_local(self) -> None:
         opts = ["--dry-run", "--local", self.root]
         dirs, files = process_and_return_filelist(opts)
         self.assertEqual(len(dirs), 1)

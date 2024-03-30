@@ -31,7 +31,7 @@ class LanguageImporter:
     fallback = 'en'
     # TODO: use a dummy module returning empty strings?, configurable?
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.cache = {}
 
     def import_from_packages(self, name, reporter=None):
@@ -51,7 +51,7 @@ class LanguageImporter:
             break
         return module
 
-    def check_content(self, module):
+    def check_content(self, module) -> None:
         """Check if we got a Docutils language module."""
         if not (isinstance(module.labels, dict)
                 and isinstance(module.bibliographic_fields, dict)

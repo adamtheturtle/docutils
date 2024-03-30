@@ -15,6 +15,7 @@ import re
 import docutils
 from docutils import frontend, nodes, utils
 from docutils.writers import html4css1
+from typing import Optional
 
 themes_dir_path = utils.relative_path(
     os.path.join(os.getcwd(), 'dummy'),
@@ -86,7 +87,7 @@ class Writer(html4css1.Writer):
     config_section_dependencies = ('writers', 'html writers',
                                    'html4css1 writer')
 
-    def __init__(self):
+    def __init__(self) -> None:
         html4css1.Writer.__init__(self)
         self.translator_class = S5HTMLTranslator
 
@@ -150,7 +151,7 @@ class S5HTMLTranslator(html4css1.HTMLTranslator):
     required_theme_files = indirect_theme_files + direct_theme_files
     """Names of mandatory theme files."""
 
-    def __init__(self, *args):
+    def __init__(self, *args) -> None:
         html4css1.HTMLTranslator.__init__(self, *args)
         # insert S5-specific stylesheet and script stuff:
         self.theme_file_path = None
@@ -173,13 +174,13 @@ class S5HTMLTranslator(html4css1.HTMLTranslator):
         self.section_count = 0
         self.theme_files_copied = None
 
-    def setup_theme(self):
+    def setup_theme(self) -> None:
         if self.document.settings.theme_url:
             self.theme_file_path = self.document.settings.theme_url
         else:
             self.copy_theme()
 
-    def copy_theme(self):
+    def copy_theme(self) -> None:
         """
         Locate & copy theme files.
 
@@ -249,7 +250,7 @@ class S5HTMLTranslator(html4css1.HTMLTranslator):
 
     files_to_skip_pattern = re.compile(r'~$|\.bak$|#$|\.cvsignore$')
 
-    def copy_file(self, name, source_dir, dest_dir):
+    def copy_file(self, name, source_dir, dest_dir) -> Optional[bool]:
         """
         Copy file `name` from `source_dir` to `dest_dir`.
         Return True if the file exists in either `source_dir` or `dest_dir`.
@@ -280,7 +281,7 @@ class S5HTMLTranslator(html4css1.HTMLTranslator):
         if os.path.isfile(dest):
             return True
 
-    def depart_document(self, node):
+    def depart_document(self, node) -> None:
         self.head_prefix.extend([self.doctype,
                                  self.head_prefix_template %
                                  {'lang': self.settings.language_code}])
@@ -313,14 +314,14 @@ class S5HTMLTranslator(html4css1.HTMLTranslator):
                               + self.docinfo + self.body
                               + self.body_suffix[:-1])
 
-    def depart_footer(self, node):
+    def depart_footer(self, node) -> None:
         start = self.context.pop()
         self.s5_footer.append('<h2>')
         self.s5_footer.extend(self.body[start:])
         self.s5_footer.append('</h2>')
         del self.body[start:]
 
-    def depart_header(self, node):
+    def depart_header(self, node) -> None:
         start = self.context.pop()
         header = ['<div id="header">\n']
         header.extend(self.body[start:])
@@ -328,7 +329,7 @@ class S5HTMLTranslator(html4css1.HTMLTranslator):
         del self.body[start:]
         self.s5_header.extend(header)
 
-    def visit_section(self, node):
+    def visit_section(self, node) -> None:
         if not self.section_count:
             self.body.append('\n</div>\n')
         self.section_count += 1
@@ -339,7 +340,7 @@ class S5HTMLTranslator(html4css1.HTMLTranslator):
         else:
             self.body.append(self.starttag(node, 'div', CLASS='slide'))
 
-    def visit_subtitle(self, node):
+    def visit_subtitle(self, node) -> None:
         if isinstance(node.parent, nodes.section):
             level = self.section_level + self.initial_header_level - 1
             if level == 1:
@@ -350,5 +351,5 @@ class S5HTMLTranslator(html4css1.HTMLTranslator):
         else:
             html4css1.HTMLTranslator.visit_subtitle(self, node)
 
-    def visit_title(self, node):
+    def visit_title(self, node) -> None:
         html4css1.HTMLTranslator.visit_title(self, node)

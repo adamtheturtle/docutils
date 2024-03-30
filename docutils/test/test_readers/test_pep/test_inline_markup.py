@@ -25,7 +25,7 @@ from docutils.utils import new_document
 
 
 class PEPParserTestCase(unittest.TestCase):
-    def test_parser(self):
+    def test_parser(self) -> None:
         parser = Parser(rfc2822=True, inliner=Inliner())
         settings = get_default_settings(Parser, Reader)
         for name, cases in totest.items():

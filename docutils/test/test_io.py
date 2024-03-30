@@ -33,7 +33,7 @@ preferredencoding = codecs.lookup(
 
 # Stub: Buffer with 'strict' auto-conversion of input to byte string:
 class BBuf(BytesIO):
-    def write(self, data):
+    def write(self, data) -> None:
         if isinstance(data, str):
             data.encode('ascii', 'strict')
         super().write(data)
@@ -41,7 +41,7 @@ class BBuf(BytesIO):
 
 # Stub: Buffer expecting unicode string:
 class UBuf(StringIO):
-    def write(self, data):
+    def write(self, data) -> None:
         # emulate Python 3 handling of stdout, stderr
         if isinstance(data, bytes):
             raise TypeError('must be unicode, not bytes')
@@ -51,26 +51,26 @@ class UBuf(StringIO):
 class mock_stdout(UBuf):
     encoding = 'utf-8'
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.buffer = BBuf()
         super().__init__()
 
 
 class HelperTests(unittest.TestCase):
 
-    def test_check_encoding_true(self):
+    def test_check_encoding_true(self) -> None:
         """Return `True` if lookup returns the same codec"""
         self.assertEqual(True, du_io.check_encoding(mock_stdout, 'utf-8'))
         self.assertEqual(True, du_io.check_encoding(mock_stdout, 'utf_8'))
         self.assertEqual(True, du_io.check_encoding(mock_stdout, 'utf8'))
         self.assertEqual(True, du_io.check_encoding(mock_stdout, 'UTF-8'))
 
-    def test_check_encoding_false(self):
+    def test_check_encoding_false(self) -> None:
         """Return `False` if lookup returns different codecs"""
         self.assertEqual(False, du_io.check_encoding(mock_stdout, 'ascii'))
         self.assertEqual(False, du_io.check_encoding(mock_stdout, 'latin-1'))
 
-    def test_check_encoding_none(self):
+    def test_check_encoding_none(self) -> None:
         """Cases where the comparison fails."""
         # stream.encoding is None:
         self.assertEqual(None,
@@ -83,7 +83,7 @@ class HelperTests(unittest.TestCase):
         # encoding is invalid
         self.assertEqual(None, du_io.check_encoding(mock_stdout, 'UTF-9'))
 
-    def test_error_string(self):
+    def test_error_string(self) -> None:
         us = '\xfc'       # bytes(us) fails
         bs = b'\xc3\xbc'  # str(bs) returns repr(bs)
 
@@ -97,7 +97,7 @@ class HelperTests(unittest.TestCase):
 
 class InputTests(unittest.TestCase):
 
-    def test_bom_handling(self):
+    def test_bom_handling(self) -> None:
         # Provisional:
         # default input encoding will change to UTF-8 in Docutils 0.22
         source = '\ufeffdata\n\ufeff blah\n'
@@ -112,7 +112,7 @@ class InputTests(unittest.TestCase):
         input = du_io.StringInput(source=source)
         self.assertEqual(source, input.read())
 
-    def test_encoding_declaration(self):
+    def test_encoding_declaration(self) -> None:
         input = du_io.StringInput(source=b"""\
 .. -*- coding: ascii -*-
 data
@@ -135,7 +135,7 @@ print("hello world")
 """)
         self.assertNotEqual(input.successful_encoding, 'ascii')
 
-    def test_decode_unicode(self):
+    def test_decode_unicode(self) -> None:
         # With the special value "unicode" or "Unicode":
         uniinput = du_io.Input(encoding='unicode')
         # keep unicode instances as-is
@@ -150,7 +150,7 @@ class OutputTests(unittest.TestCase):
     bdata = b'\xfc'
     udata = '\xfc'
 
-    def setUp(self):
+    def setUp(self) -> None:
         self.bdrain = BBuf()
         """Buffer accepting binary strings (bytes)"""
         self.udrain = UBuf()
@@ -158,32 +158,32 @@ class OutputTests(unittest.TestCase):
         self.mock_stdout = mock_stdout()
         """Stub of sys.stdout under Python 3"""
 
-    def test_write_unicode(self):
+    def test_write_unicode(self) -> None:
         fo = du_io.FileOutput(destination=self.udrain, encoding='unicode',
                               autoclose=False)
         fo.write(self.udata)
         self.assertEqual(self.udata, self.udrain.getvalue())
 
-    def test_write_utf8(self):
+    def test_write_utf8(self) -> None:
         fo = du_io.FileOutput(destination=self.udrain, encoding='utf-8',
                               autoclose=False)
         fo.write(self.udata)
         self.assertEqual(self.udata, self.udrain.getvalue())
 
-    def test_FileOutput_hande_io_errors_deprection_warning(self):
+    def test_FileOutput_hande_io_errors_deprection_warning(self) -> None:
         with self.assertWarnsRegex(DeprecationWarning,
                                    '"handle_io_errors" is ignored'):
             du_io.FileOutput(handle_io_errors=True)
 
     # With destination in binary mode, data must be binary string
     # and is written as-is:
-    def test_write_bytes(self):
+    def test_write_bytes(self) -> None:
         fo = du_io.FileOutput(destination=self.bdrain, encoding='utf-8',
                               mode='wb', autoclose=False)
         fo.write(self.bdata)
         self.assertEqual(self.bdata, self.bdrain.getvalue())
 
-    def test_write_bytes_to_stdout(self):
+    def test_write_bytes_to_stdout(self) -> None:
         # try writing data to `destination.buffer`, if data is
         # instance of `bytes` and writing to `destination` fails:
         fo = du_io.FileOutput(destination=self.mock_stdout)
@@ -191,14 +191,14 @@ class OutputTests(unittest.TestCase):
         self.assertEqual(self.bdata,
                          self.mock_stdout.buffer.getvalue())
 
-    def test_encoding_clash_resolved(self):
+    def test_encoding_clash_resolved(self) -> None:
         fo = du_io.FileOutput(destination=self.mock_stdout,
                               encoding='latin1', autoclose=False)
         fo.write(self.udata)
         self.assertEqual(self.udata.encode('latin1'),
                          self.mock_stdout.buffer.getvalue())
 
-    def test_encoding_clash_nonresolvable(self):
+    def test_encoding_clash_nonresolvable(self) -> None:
         del self.mock_stdout.buffer
         fo = du_io.FileOutput(destination=self.mock_stdout,
                               encoding='latin1', autoclose=False)
@@ -206,11 +206,11 @@ class OutputTests(unittest.TestCase):
 
 
 class ErrorOutputTests(unittest.TestCase):
-    def test_defaults(self):
+    def test_defaults(self) -> None:
         e = du_io.ErrorOutput()
         self.assertEqual(sys.stderr, e.destination)
 
-    def test_bbuf(self):
+    def test_bbuf(self) -> None:
         buf = BBuf()  # buffer storing byte string
         e = du_io.ErrorOutput(buf, encoding='ascii')
         # write byte-string as-is
@@ -228,7 +228,7 @@ class ErrorOutputTests(unittest.TestCase):
         e.write(' u\xfc')
         self.assertEqual(b'b\xfc u\\xfc e\\xfc u\xc3\xbc', buf.getvalue())
 
-    def test_ubuf(self):
+    def test_ubuf(self) -> None:
         buf = UBuf()  # buffer only accepting unicode string
         # decode of binary strings
         e = du_io.ErrorOutput(buf, encoding='ascii')
@@ -253,14 +253,14 @@ class FileInputTests(unittest.TestCase):
     # Up to Docutils 0.18, auto-detection was not used under Python 3
     # unless reading a file with Python's default encoding failed
 
-    def test_bom_utf_8(self):
+    def test_bom_utf_8(self) -> None:
         """Drop optional BOM from utf-8 encoded files.
         """
         source = du_io.FileInput(
             source_path=os.path.join(DATA_ROOT, 'utf-8-sig.txt'))
         self.assertTrue(source.read().startswith('Grüße'))
 
-    def test_bom_utf_16(self):
+    def test_bom_utf_16(self) -> None:
         """Drop BOM from utf-16 encoded files, use correct encoding.
         """
         # Assert correct decoding, BOM is gone.
@@ -268,14 +268,14 @@ class FileInputTests(unittest.TestCase):
             source_path=os.path.join(DATA_ROOT, 'utf-16-le-sig.txt'))
         self.assertTrue(source.read().startswith('Grüße'))
 
-    def test_coding_slug(self):
+    def test_coding_slug(self) -> None:
         """Use self-declared encoding.
         """
         source = du_io.FileInput(
             source_path=os.path.join(DATA_ROOT, 'latin2.txt'))
         self.assertTrue(source.read().endswith('škoda\n'))
 
-    def test_fallback_utf8(self):
+    def test_fallback_utf8(self) -> None:
         """Try 'utf-8', if encoding is not specified in the source."""
         source = du_io.FileInput(
             source_path=os.path.join(DATA_ROOT, 'utf8.txt'))
@@ -283,7 +283,7 @@ class FileInputTests(unittest.TestCase):
 
     @unittest.skipIf(preferredencoding in (None, 'ascii', 'utf-8'),
                      'locale encoding not set or UTF-8')
-    def test_fallback_no_utf8(self):
+    def test_fallback_no_utf8(self) -> None:
         # If  no encoding is given and decoding with 'utf-8' fails,
         # use the locale's preferred encoding (if not None).
         # Provisional: the default will become 'utf-8'
@@ -296,7 +296,7 @@ class FileInputTests(unittest.TestCase):
         if successful_encoding == 'iso8859-1':
             self.assertEqual('Grüße\n', data)
 
-    def test_readlines(self):
+    def test_readlines(self) -> None:
         source = du_io.FileInput(
             source_path=os.path.join(DATA_ROOT, 'include.txt'))
         data = source.readlines()

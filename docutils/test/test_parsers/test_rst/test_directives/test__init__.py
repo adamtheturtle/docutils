@@ -29,17 +29,17 @@ from docutils.parsers.rst import directives
 
 class DirectiveOptionConversionTestCase(unittest.TestCase):
 
-    def test_flag(self):
+    def test_flag(self) -> None:
         # Raise error when there is an argument:
         self.assertEqual(None, directives.flag(''))
         self.assertRaises(ValueError, directives.flag, 'alles')
 
-    def test_unchanged_required(self):
+    def test_unchanged_required(self) -> None:
         # Raise error when there is no argument:
         self.assertRaises(ValueError, directives.unchanged_required, None)
         self.assertEqual(3, directives.unchanged_required(3))
 
-    def test_unchanged(self):
+    def test_unchanged(self) -> None:
         self.assertEqual('', directives.unchanged(''))
         self.assertTrue('something' == directives.unchanged('something'))
         self.assertEqual(3, directives.unchanged(3))
@@ -47,7 +47,7 @@ class DirectiveOptionConversionTestCase(unittest.TestCase):
 
     # TODO: 13 more directive option conversion functions.
 
-    def test_parser_name(self):
+    def test_parser_name(self) -> None:
         self.assertEqual(directives.parser_name(None), None)
         self.assertEqual(directives.parser_name('null'),
                          docutils.parsers.null.Parser)

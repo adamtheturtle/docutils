@@ -19,6 +19,7 @@ if __name__ == '__main__':
 
 import docutils
 from docutils import core, nodes, writers
+from typing import NoReturn
 
 
 stop_traversal_input = '''
@@ -40,17 +41,17 @@ KaZoom! Train crashes.
 
 class AttentiveVisitor(nodes.SparseNodeVisitor):
 
-    def visit_attention(self, node):
+    def visit_attention(self, node) -> NoReturn:
         raise nodes.StopTraversal
 
-    def visit_bullet_list(self, node):
+    def visit_bullet_list(self, node) -> NoReturn:
         raise RuntimeError("It's too late for attention, "
                            "more discipline is needed!.")
 
 
 class AttentiveWriter(writers.Writer):
 
-    def translate(self):
+    def translate(self) -> None:
         self.visitor = visitor = AttentiveVisitor(self.document)
 
         # Test both kinds of traversals.
@@ -64,7 +65,7 @@ class StopTraversalTests(unittest.TestCase, docutils.SettingsSpec):
     Test interrupting the visitor during traversal.  In this test we stop it
     when we reach an attention node.
     """
-    def test_stop_traversal(self):
+    def test_stop_traversal(self) -> None:
         # Load some document tree in memory.
         doctree = core.publish_doctree(
             source=stop_traversal_input,

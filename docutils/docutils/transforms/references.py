@@ -37,7 +37,7 @@ class PropagateTargets(Transform):
 
     default_priority = 260
 
-    def apply(self):
+    def apply(self) -> None:
         for target in self.document.findall(nodes.target):
             # Only block-level targets without reference (like ".. _target:"):
             if (isinstance(target.parent, nodes.TextElement)
@@ -112,7 +112,7 @@ class AnonymousHyperlinks(Transform):
 
     default_priority = 440
 
-    def apply(self):
+    def apply(self) -> None:
         anonymous_refs = []
         anonymous_targets = []
         for node in self.document.findall(nodes.reference):
@@ -205,13 +205,13 @@ class IndirectHyperlinks(Transform):
 
     default_priority = 460
 
-    def apply(self):
+    def apply(self) -> None:
         for target in self.document.indirect_targets:
             if not target.resolved:
                 self.resolve_indirect_target(target)
             self.resolve_indirect_references(target)
 
-    def resolve_indirect_target(self, target):
+    def resolve_indirect_target(self, target) -> None:
         refname = target.get('refname')
         if refname is None:
             reftarget_id = target['refid']
@@ -255,17 +255,17 @@ class IndirectHyperlinks(Transform):
             del target['refname']
         target.resolved = 1
 
-    def nonexistent_indirect_target(self, target):
+    def nonexistent_indirect_target(self, target) -> None:
         if target['refname'] in self.document.nameids:
             self.indirect_target_error(target, 'which is a duplicate, and '
                                        'cannot be used as a unique reference')
         else:
             self.indirect_target_error(target, 'which does not exist')
 
-    def circular_indirect_reference(self, target):
+    def circular_indirect_reference(self, target) -> None:
         self.indirect_target_error(target, 'forming a circular reference')
 
-    def indirect_target_error(self, target, explanation):
+    def indirect_target_error(self, target, explanation) -> None:
         naming = ''
         reflist = []
         if target['names']:
@@ -288,7 +288,7 @@ class IndirectHyperlinks(Transform):
             ref.replace_self(prb)
         target.resolved = 1
 
-    def resolve_indirect_references(self, target):
+    def resolve_indirect_references(self, target) -> None:
         if target.hasattr('refid'):
             attname = 'refid'
             call_method = self.document.note_refid
@@ -348,7 +348,7 @@ class ExternalTargets(Transform):
 
     default_priority = 640
 
-    def apply(self):
+    def apply(self) -> None:
         for target in self.document.findall(nodes.target):
             if target.hasattr('refuri'):
                 refuri = target['refuri']
@@ -368,12 +368,12 @@ class InternalTargets(Transform):
 
     default_priority = 660
 
-    def apply(self):
+    def apply(self) -> None:
         for target in self.document.findall(nodes.target):
             if not target.hasattr('refuri') and not target.hasattr('refid'):
                 self.resolve_reference_ids(target)
 
-    def resolve_reference_ids(self, target):
+    def resolve_reference_ids(self, target) -> None:
         """
         Given::
 
@@ -487,7 +487,7 @@ class Footnotes(Transform):
           '\u2663',                    # ♣ &clubs; club suit
           ]
 
-    def apply(self):
+    def apply(self) -> None:
         self.autofootnote_labels = []
         startnum = self.document.autofootnote_start
         self.document.autofootnote_start = self.number_footnotes(startnum)
@@ -524,7 +524,7 @@ class Footnotes(Transform):
                 self.autofootnote_labels.append(label)
         return startnum
 
-    def number_footnote_references(self, startnum):
+    def number_footnote_references(self, startnum) -> None:
         """Assign numbers to autonumbered footnote references."""
         i = 0
         for ref in self.document.autofootnote_refs:
@@ -557,7 +557,7 @@ class Footnotes(Transform):
             ref.resolved = 1
             i += 1
 
-    def symbolize_footnotes(self):
+    def symbolize_footnotes(self) -> None:
         """Add symbols indexes to "[*]"-style footnotes and references."""
         labels = []
         for footnote in self.document.symbol_footnotes:
@@ -594,7 +594,7 @@ class Footnotes(Transform):
             footnote.add_backref(ref['ids'][0])
             i += 1
 
-    def resolve_footnotes_and_citations(self):
+    def resolve_footnotes_and_citations(self) -> None:
         """
         Link manually-labeled footnotes and citations to/from their
         references.
@@ -610,7 +610,7 @@ class Footnotes(Transform):
                     reflist = self.document.citation_refs[label]
                     self.resolve_references(citation, reflist)
 
-    def resolve_references(self, note, reflist):
+    def resolve_references(self, note, reflist) -> None:
         assert len(note['ids']) == 1
         id = note['ids'][0]
         for ref in reflist:
@@ -660,7 +660,7 @@ class Substitutions(Transform):
     """The Substitutions transform has to be applied very early, before
     `docutils.transforms.frontmatter.DocTitle` and others."""
 
-    def apply(self):
+    def apply(self) -> None:
         defs = self.document.substitution_defs
         normed = self.document.substitution_names
         nested = {}
@@ -764,12 +764,12 @@ class TargetNotes(Transform):
     """The TargetNotes transform has to be applied after `IndirectHyperlinks`
     but before `Footnotes`."""
 
-    def __init__(self, document, startnode):
+    def __init__(self, document, startnode) -> None:
         Transform.__init__(self, document, startnode=startnode)
 
         self.classes = startnode.details.get('class', [])
 
-    def apply(self):
+    def apply(self) -> None:
         notes = {}
         nodelist = []
         for target in self.document.findall(nodes.target):
@@ -845,7 +845,7 @@ class DanglingReferences(Transform):
 
     default_priority = 850
 
-    def apply(self):
+    def apply(self) -> None:
         visitor = DanglingReferencesVisitor(
             self.document,
             self.document.transformer.unknown_reference_resolvers)
@@ -875,15 +875,15 @@ class DanglingReferences(Transform):
 
 class DanglingReferencesVisitor(nodes.SparseNodeVisitor):
 
-    def __init__(self, document, unknown_reference_resolvers):
+    def __init__(self, document, unknown_reference_resolvers) -> None:
         nodes.SparseNodeVisitor.__init__(self, document)
         self.document = document
         self.unknown_reference_resolvers = unknown_reference_resolvers
 
-    def unknown_visit(self, node):
+    def unknown_visit(self, node) -> None:
         pass
 
-    def visit_reference(self, node):
+    def visit_reference(self, node) -> None:
         if node.resolved or not node.hasattr('refname'):
             return
         refname = node['refname']
